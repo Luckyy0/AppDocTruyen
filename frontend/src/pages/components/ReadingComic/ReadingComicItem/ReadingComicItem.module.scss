@@ -1,0 +1,35 @@
+.wrapper{
+    max-height: 24rem;
+    // border-bottom: 1px solid red;
+    margin-bottom: 4%;
+}
+.image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    .image-main {
+        object-fit: fill;
+        width: 70%;
+        // height: 60%;
+        max-width: 100%;
+    }
+}
+
+.content {
+    .content-name {
+        margin-top: 7%;
+        text-align: center;
+        margin-bottom: 4%;
+    }
+    .content-dadoc {
+        color: #ccc;
+        font-size: 1.3rem;
+    }
+    .content-genre {
+        text-align: end;
+        color:  orange;
+        text-align: end;
+        font-size: 1.3rem;
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/refreshToken.schema.json",
+    "title": "Validate refresh token request",
+    "description": "refresh token",
+    "type":"object",
+    "additionalProperties": false,
+    "properties": {
+        "token":{
+            "type":"string"
+        }
+    },
+    "required": ["token"]
+}

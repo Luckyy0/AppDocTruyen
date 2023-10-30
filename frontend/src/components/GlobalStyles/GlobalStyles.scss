@@ -1,0 +1,84 @@
+@import "./variables.scss";
+@import "./Grid.scss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.6rem;
+    line-height: $line-height;
+    text-rendering: optimizeSpeed;
+}
+
+.offscreen {
+    display: none;
+}
+
+.icon-gutters {
+    margin-right: 0.6rem;
+}
+.o {
+    display: flex;
+    align-items: center;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.full {
+    width: inherit;
+    height: inherit;
+}
+
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: none;
+}
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+a { 
+    text-decoration: none;
+    color:  black;
+}
+
+.hover {
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(22, 24, 35, 0.06);
+    }
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.space-beetween {
+    justify-content: space-between;
+}
+
+.dis-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.show {
+    display: block;
+}

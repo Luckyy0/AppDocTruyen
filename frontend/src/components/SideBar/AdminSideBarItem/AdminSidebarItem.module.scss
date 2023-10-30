@@ -1,0 +1,28 @@
+@import '../../GlobalStyles/variables.scss';
+.wrapper {
+    margin: 0 auto;
+    padding: 1.5rem 0.5rem;
+    padding-left: 2rem;
+    text-align: left;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.6rem;
+    cursor: pointer;
+    .name {
+        padding-left: 1.2rem;
+        user-select: none;
+    }
+    &:hover:not(.isActive) {
+        background-color: orangered;
+    }
+    &:active{
+        opacity: 0.7;   
+    }
+}
+.isActive {
+    color: $admin-primary-color;
+}

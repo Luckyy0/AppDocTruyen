@@ -1,0 +1,19 @@
+@import '../GlobalStyles/variables.scss';
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    .name {
+        color: $admin-primary-color;
+        margin: auto;
+        font-size: 2.2rem;
+        font-weight: 600;
+    }
+    .user {
+        font-weight: 600;
+        font-size: 1.8;
+        margin-right: 2.5rem;
+    }
+}

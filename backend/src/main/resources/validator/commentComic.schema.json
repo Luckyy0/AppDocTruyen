@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/commentComic.schema.json",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "comicId": {
+            "type": "number"
+        },
+        "content": {
+            "type": "string"
+        }
+    },
+    "required": ["content","comicId"]
+}

@@ -1,0 +1,19 @@
+.index {
+    position: absolute;
+    background-color: rgb(117, 39, 218);
+    top: 0;
+    left: 0;
+    color: #fff;
+    font-size: 1.6rem;
+    padding: 0.35rem 1.3rem;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: calc(100% - 3rem);
+        top: 100%;
+        border-bottom: 1rem solid transparent;
+        border-left: 1.5rem solid rgb(117, 39, 218);
+        border-right: 1.5rem solid rgb(117, 39, 218);
+    }
+}

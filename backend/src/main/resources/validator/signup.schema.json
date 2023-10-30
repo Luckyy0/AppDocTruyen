@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/createUser.schema.json",
+    "title": "Validate create user request",
+    "description": "create new user",
+    "type":"object",
+    "additionalProperties": false,
+    "properties": {
+        "email": {
+            "type": "string",
+            "description": "Email address",
+            "pattern": "(^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$)"
+        },
+        "username":{
+            "type":"string",
+            "pattern": "([A-Za-z0-9])"
+        },
+        "password":{
+            "type":"string",
+            "pattern": "([A-Za-z0-9*.!@$%^&,.?/~_+-=|].{7,32}$)"
+        },
+        "rePassword":{
+            "type":"string",
+            "pattern": "([A-Za-z0-9*.!@$%^&,.?/~_+-=|].{7,32}$)"
+        }
+    },
+    "required": ["email","username","password","rePassword"]
+}

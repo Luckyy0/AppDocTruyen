@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/chapter.schema.json",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "chapNumber": {
+            "type": "number"
+        },
+        "title": {
+            "type": "string"
+        },
+        "content": {
+            "type": "string"
+        },
+        "comicId": {
+            "type": "number"
+        }
+    },
+    "required": ["chapNumber", "title", "content", "comicId"]
+}

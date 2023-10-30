@@ -1,0 +1,102 @@
+.wrapper {
+    padding-top: 3rem;
+    padding-bottom: 8rem;
+
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.content-1 {
+    margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    padding: 0 1rem;
+    font-size: 1.4rem;
+}
+
+.content-2 {
+    margin-top: 3rem;
+    padding-left: 1rem;
+    width: 100%;
+    .e_1,
+    .e_2 {
+        text-align: center;
+        font-weight: 600;
+    }
+    .e_1 {
+        font-size: 1.8rem;
+    }
+    .e_2 {
+        font-size: 2.2rem;
+    }
+}
+.content-3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    padding-left: 1rem;
+    width: 100%;
+}
+
+.list_chap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    .list_chapter {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 1rem;
+        overflow-y: scroll;
+        background-color: #fff;
+        height: 25rem;
+        box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.3);
+        padding: 2rem 0;
+        border-radius: 5px;
+        .list_chapter-item {
+            text-align: center;
+            padding: 0.7rem 0;
+            margin-top: 3rem;
+            .chapter_name {
+                font-size: 1.4rem;
+                padding: 0.5rem 0;
+                &:hover {
+                    padding: 0.7rem 0;
+                    font-size: 1.6rem;
+                    color: #fff;
+                    background-color: orangered !important;
+                }
+            }
+        }
+    }
+    &:hover .list_chapter{
+        display: block;
+    }
+}
+
+.content-4 {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-left: 1rem;
+    width: 100%;
+}
+
+.content-5 {
+    margin-top: 5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .main_chap {
+        font-size: 1.6rem;
+        line-height: 2;
+        width: 95%;
+        padding: 1rem 3rem;
+        text-align: justify;
+    }
+}

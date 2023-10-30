@@ -1,0 +1,37 @@
+.wrapper {
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    // max-height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .image {
+        max-height: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .image-main {
+            object-fit: cover;
+            height: 6rem;
+            width: 6rem;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+    }
+    .icon {
+        position: absolute;
+        top: -5px;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .vip{
+            width: 2.4rem;
+            height: 2.4rem;
+        }
+    }
+}

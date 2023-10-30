@@ -1,0 +1,43 @@
+{
+    "$id": "http://json-schema.org/draft-07/updateProfile.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "validate update profile request",
+    "description": "profile request",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "firstName": {
+            "type": "string",
+            "pattern": "([A-Za-z0-9]$)",
+            "maxLength": 32
+        },
+        "lastName": {
+            "type": "string",
+            "pattern": "([A-Za-z0-9]$)",
+            "maxLength": 32
+        },
+
+        "image": {
+            "type": "string"
+        },
+
+        "phoneNumber": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 11,
+            "pattern": "([0-9])"
+        },
+        "year": {
+            "type": "number",
+            "minimum": 1900,
+            "maximum": 2023
+        },
+        "description": {
+            "type": "string"
+        },
+        "gender": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "ORTHER"]
+        }
+    }
+}

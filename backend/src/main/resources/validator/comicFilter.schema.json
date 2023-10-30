@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/comicFilter.schema.json",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "pageNumber": {
+            "type": "integer"
+        },
+        "pageSize": {
+            "type": "integer"
+        }
+    },
+    "required": ["pageNumber", "pageSize"]
+}

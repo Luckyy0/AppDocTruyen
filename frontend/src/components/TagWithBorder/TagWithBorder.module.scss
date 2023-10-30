@@ -1,0 +1,21 @@
+.wrapper {
+    margin: 0.5rem;
+    border: 1px solid orangered;
+    color: orangered;
+    background-color: #fff;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.1s ease;
+    transition: color 0.2s ease-in;
+    cursor: pointer;
+    .name{
+        user-select: none;
+    }
+    &:hover {
+        background-color: orange;
+        color: #fff;
+    }
+}
+.hidden{
+    display: none;
+}

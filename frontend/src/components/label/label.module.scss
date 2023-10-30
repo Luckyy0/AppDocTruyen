@@ -1,0 +1,15 @@
+@import '../GlobalStyles/variables.scss';
+
+.wrapper{
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: $primary-color;
+    font-weight: 600;
+    font-size: 1.6rem;
+    .name{
+        padding-left: 0.5rem;
+    }
+}

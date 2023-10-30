@@ -1,0 +1,31 @@
+.wrapper {
+    .form {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+        .content {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            .user_search{
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            &::after{
+                position: absolute;
+                content: "";
+                top: 100%;
+                left: 15%;
+                width: 70%;
+                height: 1px;
+                background-color: orangered;
+            }
+        }
+    }
+}

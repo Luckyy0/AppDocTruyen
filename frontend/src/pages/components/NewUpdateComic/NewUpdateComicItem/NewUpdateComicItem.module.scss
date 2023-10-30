@@ -1,0 +1,24 @@
+.wrapper {
+    min-height: 3.5%;
+    padding: 1.3rem;
+    // border-bottom: 1px solid red;
+    margin-bottom: 1%;
+    cursor: pointer;
+    .content-genre {
+        color: #ccc;
+    }
+    .content-chap {
+        font-weight: 600;
+
+    }
+    .content-auth {
+        color: #ccc;
+    }
+    .content-time {
+        color: #ccc;
+    }
+    &:hover{
+        color: orangered!important;
+        font-size: 1.8rem;
+    }
+}

@@ -1,0 +1,22 @@
+.wrapper {
+    margin-top: 2rem;
+    width: 100%;
+    .item{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        
+        height: 5rem;
+        cursor: pointer;
+        
+        .name{
+            user-select: none;
+            width: 100%;
+            padding-left: 2rem;
+        }
+        &:hover{
+            color: #fff;
+            background-color: orangered;
+        }
+    }
+}

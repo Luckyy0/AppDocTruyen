@@ -1,0 +1,27 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15rem;
+    height: 5rem;
+    cursor: pointer;
+    overflow: hidden;
+    color: inherit;
+    .img {
+        overflow: hidden;
+        .logo {
+            object-fit: fill;
+            display: flex;
+            align-items: center;
+            width: 5rem;
+            height: 5rem;
+        }
+    }
+
+    .name {
+        font-weight: 600;
+        font-size: 2.3rem;
+        padding-left: 0.5rem;
+    }
+   
+}

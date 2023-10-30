@@ -1,0 +1,110 @@
+.wrapper {
+    margin: 3rem 0;
+
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.content-1 {
+    margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    padding: 0 1rem;
+    font-size: 1.4rem;
+}
+.content-2 {
+    margin-top: 5rem;
+    width: 23%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.3);
+    .image {
+        object-fit: fill;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.content-3 {
+    margin-top: 5rem;
+    padding-left: 1rem;
+    width: 100%;
+    .line {
+        margin: 0.5rem 0;
+        display: flex;
+        font-size: 1.4rem;
+        justify-content: flex-start;
+        .e_1,
+        .e_2 {
+            flex-basis: 25%;
+        }
+    }
+}
+.content-4 {
+    display: flex;
+
+    margin-top: 1rem;
+    padding-left: 1rem;
+    width: 100%;
+}
+
+.content-5 {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-left: 1rem;
+    width: 100%;
+}
+
+.content-6 {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .info {
+        padding: 1rem 3rem;
+        text-align: justify;
+    }
+}
+.content-7 {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .list_chapter {
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        height: 40rem;
+        box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.3);
+        margin: 1rem 3rem;
+        padding: 1rem 2rem;
+        text-align: justify;
+        border-radius: 5px;
+    }
+    .list_chapter-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.5rem;
+        margin-top: 0.7rem;
+        font-size: 1.5rem;
+        min-height: 3rem;
+        
+        color: #635b5bdc;
+        border-bottom: 1px solid #ccc;
+        .chapter_name {
+        }
+        .chapter_date {
+        }
+        &:hover{
+            color: orangered;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+    }
+    
+}

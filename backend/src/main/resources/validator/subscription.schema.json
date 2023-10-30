@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/subscription.schema.json",
+    "title": "Validate create subscription request",
+    "description": "create new subscription",
+    "type":"object",
+    "additionalProperties": false,
+    "properties": {
+        "description": {
+            "type": "string"
+        },
+        "duration":{
+            "type":"number",
+            "minimum": 1
+        },
+        "price":{
+            "type":"number",
+            "minimum": 1
+        }
+    },
+    "required": ["price","duration"]
+}
