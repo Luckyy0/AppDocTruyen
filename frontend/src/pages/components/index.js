@@ -12,6 +12,7 @@ import TopSideBar from "./TopSideBar";
 import UserHistory from "./UserHistory";
 import UserLike from "./UserLike";
 import UserMark from "./UserMark";
+import UserInfo from "./UserInfo";
 import TopViewComic from "./TopViewComic";
 import TopLikeComic from "./TopLikeComic";
 import TopRateComic from "./TopRateComic";
@@ -22,4 +23,5 @@ import AdminUpdateComic from "./AdminComic/UpdateComic";
 import AdminUpdateChapter from "./AdminComic/UpdateChapter";
 import AdminGenreComic from "./AdminComic/GenreComic";
 import AdminBrowserComic from "./AdminComic/BrowserComic";
-export {AdminGenreComic,AdminUpdateChapter,AdminUpdateComic,AdminBrowserComic,SelectBar,AdminAddComic,TopRateComic,TopTrendComic,TopLikeComic,TopViewComic,TopSideBar,UserMark,UserLike,UserHistory,UserSidebar,NominatedComicItem,Comment,ChapterContent,ComicInfo,FeeComic, HotComic, NominatedComic, ReadingComic, NewUpdateComic}
+import AdminUpdateComicPage from "./AdminComic/UpdateComicPage";
+export {UserInfo,AdminUpdateComicPage,AdminGenreComic,AdminUpdateChapter,AdminUpdateComic,AdminBrowserComic,SelectBar,AdminAddComic,TopRateComic,TopTrendComic,TopLikeComic,TopViewComic,TopSideBar,UserMark,UserLike,UserHistory,UserSidebar,NominatedComicItem,Comment,ChapterContent,ComicInfo,FeeComic, HotComic, NominatedComic, ReadingComic, NewUpdateComic}

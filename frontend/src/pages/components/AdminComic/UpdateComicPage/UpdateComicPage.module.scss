@@ -1,0 +1,36 @@
+@import "../../../../components/GlobalStyles/variables.scss";
+.wrapper {
+    width: 100%;
+    margin-top: 3rem;
+    .label{
+        margin-top: 3rem;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 600;
+        color: orange;
+    }
+    
+    .button {
+        height: 4.5rem;
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgb(238, 229, 226);
+            color: orangered;
+            background-color: #2d1146;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.1s ease;
+            transition: color 0.2s ease-in;
+            font-weight: 600;
+            color: orange;
+            &:hover {
+                opacity: 0.6;
+                color: #fff;
+            }
+        }
+    }
+}

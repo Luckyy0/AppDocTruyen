@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.comic.backend.exception.CommonException;
+import com.comic.backend.exception.AuthException;
 import com.comic.backend.service.CustomUserDetailService;
 import com.comic.backend.utils.JwtUtil;
 
@@ -60,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             resolver.resolveException(request, response, null, e);
         } catch (Exception e) {
-            resolver.resolveException(request, response, null, new CommonException("Invalid token"));
+            resolver.resolveException(request, response, null, new AuthException("Invalid token"));
         }
         // filterChain.doFilter(request, response);
     }

@@ -32,7 +32,7 @@ export const ADMIN_COMIC = [
     { name: "Chỉnh sửa thông tin", page: AdminUpdateComic },
     { name: "Update chương", page: AdminUpdateChapter },
     { name: "Thể loại", page: AdminGenreComic },
-    { name: "Duyệt truyện", page: AdminBrowserComic },
+    { name: "Tác giả", page: AdminBrowserComic },
 ];
 
 export const USER_MENU_TOP_COMIC = [

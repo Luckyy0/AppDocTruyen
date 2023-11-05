@@ -1,0 +1,26 @@
+.wrapper {
+    width: 100%;
+    margin: 0.5rem;
+    border: 1px solid rgb(238, 229, 226);
+    color: orangered;
+    background-color: #2d1146;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.1s ease;
+    transition: color 0.2s ease-in;
+    cursor: pointer;
+    .name {
+        user-select: none;
+        text-align: center;
+        font-weight: 600;
+        color: orange;
+    }
+    &:hover {
+        opacity: 0.6;
+        color: #fff;
+    }
+}
+
+.hidden {
+    display: none;
+}

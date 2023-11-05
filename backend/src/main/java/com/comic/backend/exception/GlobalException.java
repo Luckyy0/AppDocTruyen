@@ -36,6 +36,13 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMap);
     }
 
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<?> handleAuthException(AuthException ex, WebRequest rq) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMap);
+    }
+
     @ExceptionHandler(ValidateException.class)
     public ResponseEntity<?> handleValidateException(ValidateException ex, WebRequest rq) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessageMap());
@@ -46,7 +53,7 @@ public class GlobalException {
     public ResponseEntity<?> handleValidateException(ExpiredJwtException ex, WebRequest rq) {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMap);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMap);
     }
 
     // bắt exception ở validation annotation

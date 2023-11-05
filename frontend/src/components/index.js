@@ -12,8 +12,19 @@ import Logo from "./Logo";
 import TagDelete from "./TagDelete";
 import TopTag from "./TopTag";
 import TagWithBorder from "./TagWithBorder";
-
+import SearchComponent from "./Search";
+import ButtonAdmin from "./Button";
+import Popup from "./Popup";
+import InputWithLabel from "./InputWithLabel";
+import TextAreaWithLabel from "./TextAreaWithLabel";
+import CustomPagnition from "./CustomPagnition";
 export {
+    CustomPagnition,
+    TextAreaWithLabel,
+    InputWithLabel,
+    Popup,
+    ButtonAdmin,
+    SearchComponent,
     TagWithBorder,
     TopTag,
     TagDelete,

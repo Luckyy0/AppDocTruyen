@@ -25,6 +25,7 @@ import com.comic.backend.dto.User.RePasswordRequest;
 import com.comic.backend.dto.User.SignupReq;
 import com.comic.backend.dto.User.SubcriptionReq;
 import com.comic.backend.dto.User.UserDTO;
+import com.comic.backend.dto.User.UserProfileDTO;
 import com.comic.backend.model.User.Subscription;
 import com.comic.backend.model.User.User;
 import com.comic.backend.model.User.UserSubscriptionInfo;
@@ -71,7 +72,20 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String jwt) {
         User user = userService.getUserByJwt(jwt);
-        return new ResponseEntity<>(user.getUserProfile(), HttpStatus.ACCEPTED);
+        
+        UserProfileDTO profile = UserProfileDTO.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .firstName(user.getUserProfile().getFirstName())
+                .lastName(user.getUserProfile().getLastName())
+                .image(user.getUserProfile().getImage())
+                .description(user.getUserProfile().getDescription())
+                .year(user.getUserProfile().getYear())
+                .phone(user.getUserProfile().getPhone())
+                .gender(user.getUserProfile().getGender().getName())
+                .roles(user.getRoles().stream().map(role -> role.getName()).toList())
+                .build();
+        return new ResponseEntity<>(profile, HttpStatus.ACCEPTED);
     }
 
     @PostMapping(PathConstants.PROFILE)
@@ -97,7 +111,7 @@ public class UserController {
         CommonFunction.jsonValidate(UserController.class, rePasswordRequestStr, JsonConstant.JSON_REQ_CHANGE_PASSWORD);
         RePasswordRequest rePasswordRequest = CommonFunction.stringJsonToObject(RePasswordRequest.class,
                 rePasswordRequestStr);
-                
+
         User user = userService.getUserByJwt(jwt);
         userService.setNewPassword(user, rePasswordRequest);
         return new ResponseEntity<>(new ApiResponse("Password change successfull"), HttpStatus.ACCEPTED);
@@ -134,7 +148,7 @@ public class UserController {
         CommonFunction.jsonValidate(UserController.class, subscriptionReqStr,
                 JsonConstant.JSON_REQ_UPDATE_SUBSCRIPTION);
         SubcriptionReq subcriptionReq = CommonFunction.stringJsonToObject(SubcriptionReq.class, subscriptionReqStr);
-        Subscription subscription = userService.updateSubscription(subscriptionId,subcriptionReq);
+        Subscription subscription = userService.updateSubscription(subscriptionId, subcriptionReq);
         return new ResponseEntity<>(subscription, HttpStatus.ACCEPTED);
     }
 
@@ -168,7 +182,7 @@ public class UserController {
 
     @GetMapping("/test")
     public ResponseEntity<?> redi(HttpServletResponse res) throws IOException {
-        
+
         return null;
 
     }

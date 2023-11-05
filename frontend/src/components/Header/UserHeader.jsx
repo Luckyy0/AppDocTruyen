@@ -15,20 +15,11 @@ import {
 import { actions, useStore } from "../../context/store";
 import { useRef, useState } from "react";
 import { USER_MENU_TOP_COMIC } from "../../utils/constants";
+import useGenres from "../../hook/useGenre";
+import useGetProfile from "../../hook/useGetProfile";
 
-const genre = [
-    { id: 0, name: "Kiếm hiệp" },
-    { id: 1, name: "Tiểu thuyết" },
-    { id: 2, name: "Ngôn tình" },
-    { id: 3, name: "Trinh thám" },
-    { id: 4, name: "Học đường" },
-    { id: 5, name: "Đời thường" },
-    { id: 6, name: "Xuyên không" },
-    { id: 7, name: "Linh dị" },
-    { id: 8, name: "Đô thị" },
-];
 const userAction = [
-    { name: "Thông tin người dùng", path: "/" },
+    { name: "Thông tin người dùng", path: "/info" },
     { name: "Đăng ký thành viên", path: "/" },
     { name: "Truyện yêu thích", path: "/like" },
     { name: "Truyện theo dõi", path: "/mark" },
@@ -40,7 +31,18 @@ function Header() {
     const [, dispatch] = useStore();
     const [inSearch, setInSearch] = useState("");
     const inRef = useRef(null);
-    // console.log('header render')
+
+    const { profile } = useGetProfile();
+    console.log(profile);
+
+    // call api get list genre
+    const { genres, isLoading, error } = useGenres();
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     const handleGenre = (gen) => {
         dispatch(actions.setUserFilterSearchReset());
@@ -57,16 +59,13 @@ function Header() {
                 {/* Danh mục */}
                 <div className={cx("col", "a-4", "b-4", "genre")}>
                     <div className={cx("hover", "genre-menu")}>
-                        <FontAwesomeIcon
-                            className="icon-gutters"
-                            icon={faBars}
-                        />
+                        <FontAwesomeIcon className="icon-gutters" icon={faBars}/>
                         Danh mục
                     </div>
                     {/* List thể loại truyện */}
                     <div className={cx("genre-options")}>
                         <div className={cx("row", "a-12", "list")}>
-                            {genre.map((gen) => (
+                            {genres.map((gen) => (
                                 <Link
                                     key={gen.id}
                                     className={cx("col", "a-6", "item")}
@@ -82,11 +81,7 @@ function Header() {
                 {/* xếp hạng */}
                 <div className={cx("col", "a-4", "b-4", "top")}>
                     <div className={cx("top-menu", "hover")}>
-                        <FontAwesomeIcon
-                            icon={faRankingStar}
-                            className="icon-gutters"
-                            size="lg"
-                        />
+                        <FontAwesomeIcon icon={faRankingStar} className="icon-gutters" size="lg"/>
                         <p className="dis-select">Xếp hạng</p>
                     </div>
                     {/* List xếp hạng */}
@@ -139,34 +134,7 @@ function Header() {
                 </Link>
             </div>
             <div className={cx("row", "a-3", "b-3", "full", "action")}>
-                {false ? (
-                    <>
-                        <Link
-                            className={cx(
-                                "col",
-                                "a-6",
-                                "o",
-                                "space-around",
-                                "hover"
-                            )}
-                            to={"/login"}
-                        >
-                            Đăng nhập
-                        </Link>
-                        <Link
-                            className={cx(
-                                "col",
-                                "a-6",
-                                "o",
-                                "space-around",
-                                "hover"
-                            )}
-                            to={"/signin"}
-                        >
-                            Đăng Ký
-                        </Link>
-                    </>
-                ) : (
+                {profile.username ? (
                     <>
                         <Link
                             className={cx(
@@ -193,7 +161,7 @@ function Header() {
                                     className="icon-gutters"
                                     icon={faUser}
                                 />
-                                Lucky
+                                {profile.username}
                             </div>
                             {/* User action */}
                             <div className={cx("user-options")}>
@@ -214,6 +182,33 @@ function Header() {
                                 </div>
                             </div>
                         </div>
+                    </>
+                ) : (
+                    <>
+                        <Link
+                            className={cx(
+                                "col",
+                                "a-6",
+                                "o",
+                                "space-around",
+                                "hover"
+                            )}
+                            to={"/login"}
+                        >
+                            Đăng nhập
+                        </Link>
+                        <Link
+                            className={cx(
+                                "col",
+                                "a-6",
+                                "o",
+                                "space-around",
+                                "hover"
+                            )}
+                            to={"/signin"}
+                        >
+                            Đăng Ký
+                        </Link>
                     </>
                 )}
             </div>

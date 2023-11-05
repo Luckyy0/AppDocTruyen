@@ -25,18 +25,21 @@ import com.comic.backend.dto.User.UserDTO;
 import com.comic.backend.exception.CommonException;
 import com.comic.backend.exception.InvalidInputException;
 import com.comic.backend.exception.UserException;
+import com.comic.backend.model.User.Gender;
 import com.comic.backend.model.User.RefreshToken;
 import com.comic.backend.model.User.Role;
 import com.comic.backend.model.User.Subscription;
 import com.comic.backend.model.User.User;
 import com.comic.backend.model.User.UserProfile;
 import com.comic.backend.model.User.UserSubscriptionInfo;
+import com.comic.backend.repository.User.GenderRepository;
 import com.comic.backend.repository.User.RoleRepository;
 import com.comic.backend.repository.User.SubscriptionRepository;
 import com.comic.backend.repository.User.UserProfileRepository;
 import com.comic.backend.repository.User.UserRepository;
 import com.comic.backend.repository.User.UserSubscriptionInfoRepository;
 import com.comic.backend.utils.JwtUtil;
+import com.comic.backend.utils.Constants.GENDER;
 import com.comic.backend.utils.Constants.ROLE;
 
 @Service
@@ -44,6 +47,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GenderRepository genderRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -94,17 +99,24 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(signupReq.getEmail()).isPresent())
             throw new UserException("email already exists.");
 
-        // check role exsist
+        // check role exist
         Role role = roleRepository.findByName(ROLE.USER).isPresent() ? roleRepository.findByName(ROLE.USER).get()
                 : roleRepository.save(Role.builder().name(ROLE.USER).build());
+        // check gender exist
+        Gender gender = genderRepository.findByName(GENDER.ORTHER).isPresent()
+                ? genderRepository.findByName(GENDER.ORTHER).get()
+                : genderRepository.save(Gender.builder().name(GENDER.ORTHER).build());
 
+        UserProfile userProfile = UserProfile.builder().gender(gender).build();
         // create and save user
         User user = User.builder().username(signupReq.getUsername())
                 .email(signupReq.getEmail())
                 .password(passwordEncoder.encode(signupReq.getPassword()))
-                .userProfile(new UserProfile())
+                .userProfile(userProfile)
                 .roles(new HashSet<>(Arrays.asList(role)))
                 .build();
+        // user.getUserProfile().setGender(gender);
+        // userProfileRepository.save(user.getUserProfile());
         User userCreated = userRepository.save(user);
 
         // return
@@ -130,13 +142,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateProfile(User user, ProfileRequest profileRequest) {
+        // check gender exist
+        Gender gender = genderRepository.findByName(profileRequest.getGender()).isPresent()
+                ? genderRepository.findByName(profileRequest.getGender()).get()
+                : genderRepository.save(Gender.builder().name(profileRequest.getGender()).build());
         UserProfile userProfile = user.getUserProfile();
         userProfile.setFirstName(profileRequest.getFirstName());
         userProfile.setLastName(profileRequest.getLastName());
         userProfile.setImage(profileRequest.getImage());
         userProfile.setDescription(profileRequest.getDescription());
         userProfile.setYear(profileRequest.getYear());
-        userProfile.getGender().setName(profileRequest.getGender());
+        userProfile.setGender(gender);
         userProfile.setPhone(profileRequest.getPhoneNumber());
         userProfileRepository.save(userProfile);
     }
@@ -234,8 +250,8 @@ public class UserServiceImpl implements UserService {
     public UserSubscriptionInfo getSubscriptionNow(User user) {
         if (user.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE.ADMIN)))
             throw new CommonException("User is admin");
-        if(checkUserVip(user)) {
-           return findFirstPayment(user.getId());
+        if (checkUserVip(user)) {
+            return findFirstPayment(user.getId());
         }
         throw new CommonException("User hiện tại chưa đăng ký thành viên vip");
     }

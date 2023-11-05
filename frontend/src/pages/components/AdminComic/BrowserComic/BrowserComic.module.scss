@@ -1,6 +1,56 @@
 @import "../../../../components/GlobalStyles/variables.scss";
 .wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+    width: 100%;
+    margin-top: 3rem;
+    .content_1 {
+        height: 3.4rem;
+    }
+    .content_2 {
+        display: none;
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+        color: aqua;
+    }
+    .content_3 {
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            border: 2px solid aquamarine;
+
+            tr {
+                text-align: center;
+                th {
+                    height: 4.6rem;
+                    border-bottom: 1px solid;
+                }
+                td {
+                    padding: 0.7rem 0;
+                }
+                &:not(:first-child):hover {
+                    background-color: coral;
+                }
+            }
+        }
+        .delete,
+        .change{
+            cursor: pointer;
+            &:hover{
+                color: orange;
+            }
+        }
+
+    }
+    .content_4 {
+        margin-top: 3rem;
+    }
+}
+
+.isShow {
+    display: block !important;
 }

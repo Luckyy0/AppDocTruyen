@@ -1,0 +1,46 @@
+.wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 4rem;
+    li {
+        height: 4rem;
+        line-height: 4rem;
+        margin: 0 0.3rem;
+    }
+}
+.page {
+    text-align: center;
+    min-width: 4rem;
+    padding: auto 0;
+    cursor: pointer;
+    &:hover:is(:not(.activePage)) {
+        a {
+            color: rgb(2, 138, 242);
+        }
+    }
+}
+.pageLink {
+    display: inline-block;
+    width: 100%;
+    color: #e1239b;
+    font-weight: 300;
+}
+.activePage {
+    background-color: rgb(190, 18, 133);
+    border-radius: 5px;
+    a {
+        color: #fff;
+    }
+}
+
+.break {
+    color: rgb(237, 22, 191);
+}
+.disable {
+    // user-select: none;
+    cursor: not-allowed;
+    a {
+        color: #ccc !important;
+    }
+}

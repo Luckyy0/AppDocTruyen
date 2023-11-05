@@ -1,0 +1,47 @@
+.wrapper {
+    width: 100%;
+    margin-top: 3rem;
+    .content_3 {
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            border: 2px solid aquamarine;
+
+            tr {
+                text-align: center;
+                th {
+                    height: 4.6rem;
+                    border-bottom: 1px solid;
+                }
+                td {
+                    padding: 0.7rem 0;
+                }
+                &:not(:first-child):hover {
+                    background-color: coral;
+                }
+            }
+        }
+        .detail{
+            cursor: pointer;
+            box-shadow: 0 1px tomato;
+            color: orange;
+            
+            &:hover{
+                color: rgb(190, 27, 219);
+                box-shadow: 0 1px orange;
+            }
+        }
+
+    }
+    .content_4 {
+        margin-top: 3rem;
+    }
+}
+
+.isShow {
+    display: block !important;
+}

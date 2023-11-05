@@ -1,4 +1,4 @@
-import { AdminLayout, BasicLayout, EmptyLayout, MainLayout } from "../layouts";
+import { AdminBasicLayout, AdminLayout, BasicLayout, EmptyLayout, MainLayout } from "../layouts";
 import {
     UserHome,
     AdminHome,
@@ -15,6 +15,8 @@ import {
     TopRate,
     TopTrend,
 } from "../pages";
+import Info from "../pages/User/Info";
+import { AdminUpdateComicPage } from "../pages/components";
 
 const publicRoutes = [
     { path: "/", component: UserHome, layout: BasicLayout },
@@ -31,9 +33,11 @@ const publicRoutes = [
 
 const privateRoutes = [
     { path: "/admin", component: AdminHome, layout: AdminLayout },
+    { path: "/admin/updatecomic", component: AdminUpdateComicPage, layout: AdminBasicLayout },
     { path: "/history", component: History, layout: BasicLayout },
     { path: "/like", component: Like, layout: BasicLayout },
     { path: "/mark", component: Mark, layout: BasicLayout },
+    { path: "/info", component: Info, layout: BasicLayout },
 ];
 
 export { publicRoutes, privateRoutes };

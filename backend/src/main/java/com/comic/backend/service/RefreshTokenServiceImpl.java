@@ -52,6 +52,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return token;
     }
 
+    // đang xử ly
     @Override
     public void deleteToken(String username, String jwt) {
         RefreshToken refreshToken = refreshTokenRepository.findByUsername(username);

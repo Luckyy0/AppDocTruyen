@@ -23,7 +23,7 @@ import lombok.ToString;
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String token;
 
