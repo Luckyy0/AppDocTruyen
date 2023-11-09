@@ -8,7 +8,7 @@ function TextAreaWithLabel({ label, onChange, value }) {
         <div className={cx("wrapper", "row", "a-12")}>
             <p className={cx("label", "col", "a-2", "a-o-1")}> {label}</p>
             <div className={cx("in", "col", "a-10")}>
-                <textarea type="text" spellCheck={false} />
+                <textarea type="text" spellCheck={false} onChange={onChange} value={value}/>
             </div>
         </div>
     );

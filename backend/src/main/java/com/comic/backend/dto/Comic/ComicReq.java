@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ComicReq {
     private String name;
+    private String image;
     private String description;
     private Long author_id;
     private COMIC type;

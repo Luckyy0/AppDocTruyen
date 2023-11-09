@@ -32,6 +32,7 @@ import com.comic.backend.model.User.User;
 import com.comic.backend.service.ComicService;
 import com.comic.backend.service.UserService;
 import com.comic.backend.utils.CommonFunction;
+import com.comic.backend.utils.Constants.CommonConstants;
 import com.comic.backend.utils.Constants.JsonConstant;
 import com.comic.backend.utils.Constants.PathConstants;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,8 +60,8 @@ public class ComicController {
     }
 
     @GetMapping("/genre")
-    public ResponseEntity<?> getListGenre() {
-        List<Genre> genres = comicService.getListGenre();
+    public ResponseEntity<?> getListGenre(@RequestParam(defaultValue = "") String search) {
+        List<Genre> genres = comicService.getListGenre(search);
         return new ResponseEntity<>(genres, HttpStatus.OK);
     }
 
@@ -94,8 +95,8 @@ public class ComicController {
     }
 
     @GetMapping("/author")
-    public ResponseEntity<?> getListAuthor() {
-        List<Author> authors = comicService.getListAuthor();
+    public ResponseEntity<?> getListAuthor(@RequestParam(defaultValue = "") String search) {
+        List<Author> authors = comicService.getListAuthor(search);
         return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
@@ -149,12 +150,15 @@ public class ComicController {
 
     @GetMapping("/comic")
     public ResponseEntity<?> getAllComic(
-            @RequestBody String comicFilterReqStr)
-            throws JsonMappingException, JsonProcessingException {
+            @RequestParam(value = "searchBy", required = false, defaultValue = "") String searchBy,
+            @RequestParam(value = "searchByData", required = false, defaultValue = "") String searchByData,
+            @RequestParam("pageNumber") int pageNumber) {
 
-        CommonFunction.jsonValidate(ComicController.class, comicFilterReqStr, JsonConstant.JSON_REQ_COMIC_FILTER);
-        ComicFilterReq comicFilterReq = CommonFunction.stringJsonToObject(ComicFilterReq.class, comicFilterReqStr);
-        Page<Comic> page = comicService.getAllComic(comicFilterReq.getPageNumber(), comicFilterReq.getPageSize());
+        // CommonFunction.jsonValidate(ComicController.class, comicFilterReqStr,
+        // JsonConstant.JSON_REQ_COMIC_FILTER);
+        // ComicFilterReq comicFilterReq =
+        // CommonFunction.stringJsonToObject(ComicFilterReq.class, comicFilterReqStr);
+        Page<Comic> page = comicService.getAllComic(pageNumber, CommonConstants.COMIC_SIZE, searchBy,searchByData);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
@@ -200,19 +204,21 @@ public class ComicController {
 
     @GetMapping(PathConstants.LIKE)
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<?> likeByUser(@RequestHeader("Authorization") String jwt,@RequestParam("pageNumber") int pageNumber) {
+    public ResponseEntity<?> likeByUser(@RequestHeader("Authorization") String jwt,
+            @RequestParam("pageNumber") int pageNumber) {
         User user = userService.getUserByJwt(jwt);
-        Page<Comic> page = comicService.getComicLikeByUser(user,pageNumber);
+        Page<Comic> page = comicService.getComicLikeByUser(user, pageNumber);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping(PathConstants.FOLLOW)
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<?> followByUser(@RequestHeader("Authorization") String jwt,@RequestParam("pageNumber") int pageNumber) {
+    public ResponseEntity<?> followByUser(@RequestHeader("Authorization") String jwt,
+            @RequestParam("pageNumber") int pageNumber) {
         System.out.println("vui");
         User user = userService.getUserByJwt(jwt);
-        
-        Page<Comic> page = comicService.getComicFollowByUser(user,pageNumber);
+
+        Page<Comic> page = comicService.getComicFollowByUser(user, pageNumber);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 

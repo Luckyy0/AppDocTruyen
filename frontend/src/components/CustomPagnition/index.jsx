@@ -4,7 +4,12 @@ import ReactPaginate from "react-paginate";
 
 const cx = classNames.bind(styles);
 
-function CustomPagnition({pageRangeDisplayed , pageCount,handlePageClick}) {
+function CustomPagnition({
+    pageRangeDisplayed,
+    pageCount,
+    handlePageClick,
+    currentPage,
+}) {
     return (
         <ReactPaginate
             className={cx("wrapper")}
@@ -21,6 +26,7 @@ function CustomPagnition({pageRangeDisplayed , pageCount,handlePageClick}) {
             breakLabel=". . ."
             nextLabel="next >"
             onPageChange={handlePageClick}
+            forcePage={currentPage}
             pageRangeDisplayed={pageRangeDisplayed}
             pageCount={pageCount}
             previousLabel="< previous"

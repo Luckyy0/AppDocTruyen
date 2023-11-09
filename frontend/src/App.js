@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { privateRoutes, publicRoutes } from "./routes";
+import { ProtectedPage, privateRoutes, publicRoutes } from "./routes";
 
 function App() {
     return (
@@ -29,9 +29,11 @@ function App() {
                                 key={index}
                                 path={route.path}
                                 element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
+                                    <ProtectedPage
+                                        Layout={Layout}
+                                        Page={Page}
+                                        role={route.role}
+                                    />
                                 }
                             />
                         );

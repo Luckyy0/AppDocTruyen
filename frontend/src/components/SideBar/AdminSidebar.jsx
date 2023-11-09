@@ -17,8 +17,6 @@ function AdminSidebar() {
     const [menuState, dispatch] = useStore();
 
     const { adminMenuSelect } = menuState;
-    console.log(adminMenuSelect);
-    console.log("admin sidebar render");
     return (
         <div className={cx("wrapper")}>
             <div className={cx("content_1", "col", "a-12")}>

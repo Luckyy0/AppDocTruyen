@@ -1,4 +1,4 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import usePrivateApi from "./usePrivateApi";
 
 const useGetProfile = () => {
@@ -6,7 +6,6 @@ const useGetProfile = () => {
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [errorProfile, setErrorProfile] = useState(null);
     const api = usePrivateApi();
-
     useEffect(() => {
         const fetchData = async () => {
             try {

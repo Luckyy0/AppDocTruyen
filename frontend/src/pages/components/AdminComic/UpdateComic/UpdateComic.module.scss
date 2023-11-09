@@ -4,6 +4,7 @@
     margin-top: 3rem;
     .content_1 {
         height: 3.4rem;
+        align-items: center;
     }
     .content_2 {
         display: none;
@@ -33,18 +34,29 @@
                     padding: 0.7rem 0;
                     min-width: 10rem;
                 }
-                &:not(:first-child):hover {
-                    background-color: coral;
-                }
+                // &:not(:first-child):hover {
+                //     background-color: coral;
+                // }
+            }
+            .img{
+                width: 7rem;
+                height: 9rem;
+                object-fit: cover;
+                overflow: hidden;
             }
         }
+        .detail,
         .delete,
         .change {
             cursor: pointer;
+            color: aquamarine;
             &:hover {
                 color: orange;
             }
         }
+    }
+    .content_4{
+        margin-top: 2rem;
     }
 }
 .isShow {

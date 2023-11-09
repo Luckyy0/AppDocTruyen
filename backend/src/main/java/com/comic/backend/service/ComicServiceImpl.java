@@ -76,8 +76,8 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public List<Genre> getListGenre() {
-        return genreRepository.findAll(Sort.by("name").ascending());
+    public List<Genre> getListGenre(String search) {
+        return genreRepository.findAllByName(search, Sort.by("name").ascending());
     }
 
     @Override
@@ -124,8 +124,8 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public List<Author> getListAuthor() {
-        return authorRepository.findAll(Sort.by("name").ascending());
+    public List<Author> getListAuthor(String search) {
+        return authorRepository.findAllByName(search, Sort.by("name").ascending());
     }
 
     @Override
@@ -165,6 +165,7 @@ public class ComicServiceImpl implements ComicService {
 
         Comic comic = Comic.builder()
                 .name(comicReq.getName())
+                .image(comicReq.getImage())
                 .author(author)
                 .description(comicReq.getDescription())
                 .type(comicReq.getType())
@@ -201,6 +202,7 @@ public class ComicServiceImpl implements ComicService {
         Author author = checkAuthorExist(comicReq.getAuthor_id());
 
         comic.setName(comicReq.getName());
+        comic.setImage(comicReq.getImage());
         comic.setAuthor(author);
         comic.setDescription(comicReq.getDescription());
         comic.setType(comicReq.getType());
@@ -220,11 +222,21 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public Page<Comic> getAllComic(int pageNumber, int pageSize) {
+    public Page<Comic> getAllComic(int pageNumber, int pageSize, String searchBy, String searchByData) {
         // Pageable chứa thông tin về số trang, kích thước trang và sắp xếp
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        List<Comic> comics = comicRepository.findAll();
+        // get data from database
+        List<Comic> comics;
+        if (searchBy.equals("id")) {
+            try {
+                int data = Integer.parseInt(searchByData);
+                comics = comicRepository.findAllById(data);
+            } catch (Exception e) {
+                comics = comicRepository.findAllById(0);
+            }
+        } else {
+            comics = comicRepository.findAllWithFilter(searchBy, searchByData);
+        }
         // get chỉ số bắt đầu của element trong pageNumber
         int startIndex = (int) pageable.getOffset();
         // get chỉ số cuối của element trong pageNumber
@@ -394,13 +406,13 @@ public class ComicServiceImpl implements ComicService {
         return likePage;
     }
 
-    private Long comicTotalLike(Long comicId){
-        Long total = likeComicRepository.getTotalLike( comicId);
+    private Long comicTotalLike(Long comicId) {
+        Long total = likeComicRepository.getTotalLike(comicId);
         return total;
     }
 
-    private Long comicTotalFollow(Long comicId){
-        Long total = followComicRepository.getTotalFollow( comicId);
+    private Long comicTotalFollow(Long comicId) {
+        Long total = followComicRepository.getTotalFollow(comicId);
         return total;
     }
 

@@ -18,7 +18,9 @@ import Popup from "./Popup";
 import InputWithLabel from "./InputWithLabel";
 import TextAreaWithLabel from "./TextAreaWithLabel";
 import CustomPagnition from "./CustomPagnition";
+import RadioWithLabel from "./RadioWithLabel";
 export {
+    RadioWithLabel,
     CustomPagnition,
     TextAreaWithLabel,
     InputWithLabel,

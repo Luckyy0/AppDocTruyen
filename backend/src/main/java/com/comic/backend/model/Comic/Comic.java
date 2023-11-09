@@ -12,6 +12,7 @@ import com.comic.backend.utils.Constants.COMIC;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -46,6 +48,10 @@ public class Comic {
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
+    private String image;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -54,7 +60,7 @@ public class Comic {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Default
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "genre_comic", joinColumns = @JoinColumn(name = "comic_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
     private List<Genre> genres = new ArrayList<>();
 
@@ -69,7 +75,7 @@ public class Comic {
     @JsonIgnore
     @Default
     @OneToMany(mappedBy = "comic")
-    private List<Chapter> chapters= new ArrayList<>();
+    private List<Chapter> chapters = new ArrayList<>();
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -87,7 +93,6 @@ public class Comic {
     @JsonIgnore
     @OneToMany(mappedBy = "comic")
     private Set<LikeComic> likeComics;
-    
 
     private LocalDateTime createAt;
     private LocalDateTime updateAt;

@@ -1,19 +1,27 @@
-import { AdminBasicLayout, AdminLayout, BasicLayout, EmptyLayout, MainLayout } from "../layouts";
+import { useEffect, useState } from "react";
+import privateApi from "../api/PrivateApi";
 import {
-    UserHome,
+    AdminBasicLayout,
+    AdminLayout,
+    BasicLayout,
+    EmptyLayout,
+    MainLayout,
+} from "../layouts";
+import {
     AdminHome,
-    Search,
     BookInfo,
-    ReadBook,
-    Login,
-    Signin,
     History,
     Like,
+    Login,
     Mark,
-    TopView,
+    ReadBook,
+    Search,
+    Signin,
     TopLike,
     TopRate,
     TopTrend,
+    TopView,
+    UserHome,
 } from "../pages";
 import Info from "../pages/User/Info";
 import { AdminUpdateComicPage } from "../pages/components";
@@ -32,12 +40,50 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: "/admin", component: AdminHome, layout: AdminLayout },
-    { path: "/admin/updatecomic", component: AdminUpdateComicPage, layout: AdminBasicLayout },
-    { path: "/history", component: History, layout: BasicLayout },
-    { path: "/like", component: Like, layout: BasicLayout },
-    { path: "/mark", component: Mark, layout: BasicLayout },
-    { path: "/info", component: Info, layout: BasicLayout },
+    { path: "/admin", component: AdminHome, layout: AdminLayout , role: 'ADMIN'},
+    {
+        path: "/admin/updatecomic",
+        component: AdminUpdateComicPage,
+        layout: AdminBasicLayout,
+    },
+    { path: "/history", component: History, layout: BasicLayout, role: 'USER' },
+    { path: "/like", component: Like, layout: BasicLayout, role: 'USER' },
+    { path: "/mark", component: Mark, layout: BasicLayout, role: 'USER' },
+    { path: "/info", component: Info, layout: BasicLayout, role: 'USER' },
 ];
 
-export { publicRoutes, privateRoutes };
+const ProtectedPage = ({ Layout, Page, role }) => {
+    const [checkLogin, setCheckLogin] = useState(false);
+    const [loading, setLoading] = useState(true);
+    //check login ...
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const dataRedirect = await privateApi.get("/profile");
+                const { roles } = dataRedirect.data;
+                if (roles.includes(role)) setCheckLogin(true);
+                setLoading(false);
+                console.log(roles);
+            } catch (error) {
+                setLoading(false);
+                setCheckLogin(false);
+            }
+        };
+        fetchData();
+    }, [role]);
+
+    if (loading) return <div>Loading ....</div>;
+    else {
+        if (checkLogin) {
+            return (
+                <Layout>
+                    <Page />
+                </Layout>
+            );
+        } else {
+            return <div>truy cập ko được phép</div>;
+        }
+    }
+};
+
+export { ProtectedPage, privateRoutes, publicRoutes };

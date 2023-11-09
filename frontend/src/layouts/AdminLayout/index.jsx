@@ -11,7 +11,6 @@ function AdminLayout() {
     const [menuState] = useStore();
 
     const { adminMenuSelect } = menuState;
-    console.log("hi" + adminMenuSelect);
     return (
         <>
             <div className={cx("container", "row", "no-gutters")}>

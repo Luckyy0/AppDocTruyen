@@ -1,22 +1,21 @@
-import styles from "./userHeader.module.scss";
+import {
+    faBars,
+    faCircleXmark,
+    faClockRotateLeft,
+    faMagnifyingGlass,
+    faRankingStar,
+    faUser
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames/bind";
 import { Link, generatePath } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faUser,
-    faBars,
-    faRankingStar,
-    faMagnifyingGlass,
-    faCircleXmark,
-    faSpinner,
-    faClockRotateLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import styles from "./userHeader.module.scss";
 
-import { actions, useStore } from "../../context/store";
 import { useRef, useState } from "react";
-import { USER_MENU_TOP_COMIC } from "../../utils/constants";
+import { actions, useStore } from "../../context/store";
 import useGenres from "../../hook/useGenre";
 import useGetProfile from "../../hook/useGetProfile";
+import { USER_MENU_TOP_COMIC } from "../../utils/constants";
 
 const userAction = [
     { name: "Thông tin người dùng", path: "/info" },
@@ -28,12 +27,13 @@ const userAction = [
 const cx = classNames.bind(styles);
 
 function Header() {
+    
     const [, dispatch] = useStore();
     const [inSearch, setInSearch] = useState("");
     const inRef = useRef(null);
 
     const { profile } = useGetProfile();
-    console.log(profile);
+    // console.log(profile);
 
     // call api get list genre
     const { genres, isLoading, error } = useGenres();

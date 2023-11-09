@@ -24,7 +24,7 @@ public interface ComicService {
 
     Genre addGenre(GenreReq genreReq);
 
-    List<Genre> getListGenre();
+    List<Genre> getListGenre(String search);
 
     void deleteGenre(Long id);
 
@@ -36,7 +36,7 @@ public interface ComicService {
 
     Author addAuthor(AuthorReq authorReq);
 
-    List<Author> getListAuthor();
+    List<Author> getListAuthor(String search);
 
     void deleteAuthor(Long id);
 
@@ -46,7 +46,7 @@ public interface ComicService {
 
     Comic updateComic(ComicReq comicReq, long id);
 
-    Page<Comic> getAllComic(int pageNumber, int pageSize);
+    Page<Comic> getAllComic(int pageNumber, int pageSize, String searchBy, String searchByData);
 
     Chapter addChapter(ChapterReq chapterReq);
 
