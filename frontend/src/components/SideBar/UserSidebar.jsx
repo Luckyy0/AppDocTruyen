@@ -8,6 +8,7 @@ import TagWithBorder from "../TagWithBorder";
 import { actions, useStore } from "../../context/store";
 import { useRef, memo, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
+import useGenres from "../../hook/useGenre";
 
 const cx = classNames.bind(styles);
 
@@ -37,16 +38,14 @@ const comicChapterNumber = [
 function UserSidebar() {
     let { "*": param } = useParams();
     const [state, dispatch] = useStore();
-    console.log("param: " + param);
     const ref = useRef(null);
+    const { genres } = useGenres();
     const {
         userSearchFilterGenre,
         userSearchFilterChap,
         userSearchFilterState,
         userSearchFilterSidebar,
     } = state;
-    console.log("sidebar user render");
-    console.log(userSearchFilterSidebar);
 
 
     const handleFilter = useCallback(
@@ -121,7 +120,7 @@ function UserSidebar() {
             <div className={cx("form")}>
                 <Label name="Thể loại" />
                 <div className={cx("content")}>
-                    {genre.map((gen) => (
+                    {genres.map((gen) => (
                         <TagWithBorder
                             key={gen.id}
                             onClick={() => handleGenre(gen)}

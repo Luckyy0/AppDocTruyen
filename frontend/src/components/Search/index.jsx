@@ -6,13 +6,13 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles);
 
-function SearchComponent({ onkeydown, value, onChange }) {
+function SearchComponent({ onkeydown, value, onChange, hint }) {
     return (
         <div className={cx("search")}>
             <input
                 className={cx("search-input")}
                 type="text"
-                placeholder="Tìm kiếm....."
+                placeholder={hint?hint:"Tìm kiếm....."}
                 spellCheck={false}
                 value={value}
                 onChange={onChange}

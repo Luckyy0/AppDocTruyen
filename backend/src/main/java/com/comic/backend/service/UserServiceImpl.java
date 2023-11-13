@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -181,8 +182,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Subscription> getListSubscription() {
-        return subscriptionRepository.findAll();
+    public List<Subscription> getListSubscription(Integer search) {
+        if(search==0) return subscriptionRepository.findAll(Sort.by("duration").ascending());
+        return subscriptionRepository.findAllByDuration( search, Sort.by("duration").ascending());
     }
 
     @Override

@@ -80,13 +80,13 @@ public class WebsecurityConfig {
                                 "http://localhost:3000",
                                 "http://localhost:4200"));
                         cfg.setAllowedMethods(Collections.singletonList("*"));
-
                         cfg.setAllowCredentials(true);
                         cfg.setAllowedHeaders(Collections.singletonList("*"));
                         cfg.setMaxAge(3600L);
                         return cfg;
                     }
-                })).build();
+                }))
+                .build();
 
     }
 }

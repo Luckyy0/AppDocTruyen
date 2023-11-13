@@ -1,31 +1,114 @@
 import styles from "./subscription.module.scss";
 import classNames from "classnames/bind";
-import { useState } from "react";
 import { ButtonAdmin, Popup, SearchComponent } from "../../../components";
+import { useCallback, useEffect, useState } from "react";
+import privateApi from "../../../api/PrivateApi";
+import publicApi from "../../../api/PublicApi";
 const cx = classNames.bind(styles);
 
 function Subscription() {
-    const [inSearch, setInSearch] = useState("dsd");
+    const [inSearch, setInSearch] = useState("");
     const [label, setLabel] = useState("");
     const [popup, SetPopup] = useState(false);
-    const [popupDelete, SetPopupDelete] = useState(false);
+    // const [popupDelete, SetPopupDelete] = useState(false);
     const [popupChange, SetPopupChange] = useState(false);
+    const [popupData, setPopupData] = useState({});
+    const [subscriptions, setSubscriptions] = useState([]);
+    console.log(subscriptions);
 
-    const handleEnterKeyDown = (e) => {
-        if (e.key === "Enter") {
-            setLabel(inSearch);
-            setInSearch("");
+    const fetchSubscriptions = useCallback(async () => {
+        try {
+            const response = await publicApi.get("/subscription", {
+                params: { search: inSearch },
+            });
+            setSubscriptions(response.data);
+        } catch (error) {
+            console.log(error.response?.data?.message || "Có lỗi xảy ra");
+        }
+    }, [inSearch]);
+
+    useEffect(() => {
+        fetchSubscriptions();
+    }, [fetchSubscriptions]);
+
+    // const handleDeleteGenre = async () => {
+    // try {
+    //     const apiResponse = await privateApi.delete(
+    //         "/subscription/" + popupData.id
+    //     );
+    //     SetPopupDelete(false);
+    //     fetchSubscriptions();
+    //     console.log(apiResponse);
+    // } catch (error) {
+    //     alert("Có lỗi xảy ra, vui lòng thử lại sau");
+    // }
+    // };
+
+    const handleUpdateSubscription = async (data, setData) => {
+        try {
+            const apiData = await privateApi.put(
+                "/subscription/" + popupData.id,
+                {
+                    description: data[0]?.value,
+                    price: parseFloat(data[1]?.value),
+                }
+            );
+            setData([
+                { name: "Mô tả ", value: "" },
+                { name: "Giá gói ", value: "" },
+            ]);
+            SetPopupChange(false);
+            fetchSubscriptions();
+            console.log(apiData);
+        } catch (error) {
+            if (!error?.response) {
+                alert("Server not Response");
+            } else {
+                console.log(error.response.data);
+            }
         }
     };
 
+    const handleAddSubscription = async (data, setData) => {
+        try {
+            const apiData = await privateApi.post("/subscription", {
+                description: data[1]?.value,
+                duration: parseFloat(data[0]?.value),
+                price: parseFloat(data[2]?.value),
+            });
+            setData([
+                { name: "Thời hạn gói ", value: "" },
+                { name: "Mô tả ", value: "" },
+                { name: "Giá gói ", value: "" },
+            ]);
+            SetPopup(false);
+            fetchSubscriptions();
+            alert("Thêm thành công");
+            console.log(apiData);
+        } catch (error) {
+            if (!error?.response) {
+                alert("Server not Response");
+            } else {
+                console.log(error.response.data);
+                alert("Vui lòng nhập đầy đủ và đúng định dạng dữ liệu");
+            }
+        }
+    };
+
+    useEffect(() => {
+        setLabel(inSearch);
+    }, [inSearch]);
     return (
         <div>
             <div className={cx("wrapper", "row", "a-12")}>
                 <div className={cx("content_1", "col", "a-3", "a-o-8")}>
                     <SearchComponent
-                        onkeydown={handleEnterKeyDown}
+                        // onkeydown={handleEnterKeyDown}
+                        hint={"Tìm kiếm theo thời hạn gói......"}
                         value={inSearch}
-                        onChange={(e) => setInSearch(e.target.value)}
+                        onChange={(e) => {
+                            setInSearch(e.target.value);
+                        }}
                     />
                 </div>
                 <div
@@ -33,14 +116,18 @@ function Subscription() {
                         isShow: label,
                     })}
                 >
-                    Kết quả tìm kiếm cho: {label}
+                    {parseFloat(inSearch) ? (
+                        <p>Kết quả tìm kiếm cho: {label}</p>
+                    ) : (
+                        <p>Vui lòng nhập số</p>
+                    )}
                 </div>
                 <div className={cx("content_3", "row", "a-12")}>
                     <table className={cx("table")}>
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Thời hạn</th>
+                                <th>Thời hạn(tháng)</th>
                                 <th>Giá gói</th>
                                 <th>Mô tả</th>
                                 <th>Số lượt mua</th>
@@ -48,29 +135,39 @@ function Subscription() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>3 tháng</td>
-                                <td>150.000 vnd</td>
-                                <td>Gói 3 tháng</td>
-                                <td>10</td>
-                                <td>
-                                    <span
-                                        className={cx("change")}
-                                        onClick={() => SetPopupChange(true)}
-                                    >
-                                        Sửa{" "}
-                                    </span>
-                                    |
-                                    <span
-                                        className={cx("delete")}
-                                        onClick={() => SetPopupDelete(true)}
-                                    >
-                                        {" "}
-                                        Xóa
-                                    </span>
-                                </td>
-                            </tr>
+                            {subscriptions.map((item) => {
+                                return (
+                                    <tr key={item.id}>
+                                        <td>{item.id}</td>
+                                        <td>{item.duration}</td>
+                                        <td>{item.price}.000 vnđ</td>
+                                        <td>{item.description}</td>
+                                        <td>0</td>
+                                        <td>
+                                            <span
+                                                className={cx("change")}
+                                                onClick={() => {
+                                                    SetPopupChange(true);
+                                                    setPopupData({ ...item });
+                                                }}
+                                            >
+                                                Sửa
+                                            </span>
+                                            {/* |
+                                            <span
+                                                className={cx("delete")}
+                                                onClick={() => {
+                                                    SetPopupDelete(true);
+                                                    setPopupData({ ...item });
+                                                }}
+                                            >
+                                                {" "}
+                                                Xóa
+                                            </span> */}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -87,32 +184,49 @@ function Subscription() {
                 onshow={() => SetPopup(false)}
                 label={"Thêm gói đăng ký"}
                 actionName={"Xác nhận"}
+                onAction={(data, setData) =>
+                    handleAddSubscription(data, setData)
+                }
                 dataArr={[
-                    { name: "Thời hạn gói đăng ký", value: "" },
-                    { name: "Giá gói", value: "" },
-                    { name: "Mô tả", value: "" },
+                    { name: "Thời hạn gói ", value: "" },
+                    { name: "Mô tả ", value: "" },
+                    { name: "Giá gói ", value: "" },
                 ]}
             />
-            {/* Popup delete */}
+            {/* Popup delete
             <Popup
                 isShow={popupDelete}
                 onshow={() => SetPopupDelete(false)}
-                label={"Bạn có chắc muốn xóa"}
+                label={
+                    "Bạn có chắc muốn xóa gói đăng ký có id là " +
+                    popupData.id +
+                    ", có tên là " +
+                    popupData.name
+                }
                 actionName={"Xác nhận"}
+                onAction={handleDeleteGenre}
                 dataArr={[]}
-            />
+            /> */}
             {/* Popup change */}
-            <Popup
-                isShow={popupChange}
-                onshow={() => SetPopupChange(false)}
-                label={"Chỉnh sửa gói đăng ký"}
-                actionName={"Xác nhận"}
-                dataArr={[
-                    { name: "Thời hạn gói đăng ký", value: "" },
-                    { name: "Giá gói", value: "" },
-                    { name: "Mô tả", value: "" },
-                ]}
-            />
+            {popupChange && (
+                <Popup
+                    isShow={popupChange}
+                    onshow={() => SetPopupChange(false)}
+                    label={
+                        "Chỉnh sửa gói đăng ký " +
+                        popupData?.duration +
+                        " tháng"
+                    }
+                    actionName={"Xác nhận"}
+                    dataArr={[
+                        { name: "Mô tả ", value: popupData?.description || "" },
+                        { name: "Giá gói ", value: popupData?.price || "" },
+                    ]}
+                    onAction={(data, setData) =>
+                        handleUpdateSubscription(data, setData)
+                    }
+                />
+            )}
         </div>
     );
 }

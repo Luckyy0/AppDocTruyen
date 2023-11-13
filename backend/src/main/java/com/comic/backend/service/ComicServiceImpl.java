@@ -1,5 +1,6 @@
 package com.comic.backend.service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import com.comic.backend.dto.CommentChapterReq;
 import com.comic.backend.dto.CommentComicReq;
 import com.comic.backend.dto.Comic.AuthorReq;
 import com.comic.backend.dto.Comic.ChapterReq;
+import com.comic.backend.dto.Comic.ChapterRes;
 import com.comic.backend.dto.Comic.ComicReq;
 import com.comic.backend.dto.Comic.GenreReq;
 import com.comic.backend.exception.CommonException;
@@ -37,6 +39,7 @@ import com.comic.backend.repository.Comic.ChapterRepository;
 import com.comic.backend.repository.Comic.ComicRepository;
 import com.comic.backend.repository.Comic.GenreRepository;
 import com.comic.backend.utils.Constants.CommonConstants;
+import com.comic.backend.utils.Constants.STATUS;
 
 @Service
 public class ComicServiceImpl implements ComicService {
@@ -222,7 +225,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public Page<Comic> getAllComic(int pageNumber, int pageSize, String searchBy, String searchByData) {
+    public Page<Comic> getAllComic(int pageNumber, int pageSize, String searchBy, String searchByData, String inSearch, String sortBy, List<String> genreCondition, STATUS statusCondition, int minChapter, int maxChapter) {
         // Pageable chứa thông tin về số trang, kích thước trang và sắp xếp
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         // get data from database
@@ -235,7 +238,11 @@ public class ComicServiceImpl implements ComicService {
                 comics = comicRepository.findAllById(0);
             }
         } else {
-            comics = comicRepository.findAllWithFilter(searchBy, searchByData);
+            if (!searchBy.equals(String.valueOf(""))) {
+                comics = comicRepository.findAllWithFilter(searchBy, searchByData);
+            }else{
+                comics= comicRepository.findByUserSearch(inSearch,sortBy, genreCondition,statusCondition,minChapter,maxChapter);
+            }
         }
         // get chỉ số bắt đầu của element trong pageNumber
         int startIndex = (int) pageable.getOffset();
@@ -270,6 +277,7 @@ public class ComicServiceImpl implements ComicService {
         chapter.setChapNumber(chapterReq.getChapNumber());
         chapter.setTitle(chapterReq.getTitle());
         chapter.setContent(chapterReq.getContent());
+        chapter.setUpdateAt(LocalDateTime.now());
         if (chapterReq.getComicId() != null) {
             chapter.setComic(comicRepository.findById(chapterReq.getComicId())
                     .orElseThrow(() -> new CommonException("Comic wiith id is not exist")));
@@ -288,7 +296,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public Page<Chapter> getListChapter(Long comicId, String sort, int pageNumber) {
+    public Page<ChapterRes> getListChapter(Long comicId, String sort, int pageNumber) {
         // Pageable chứa thông tin về số trang, kích thước trang và sắp xếp
         Pageable pageable = PageRequest.of(pageNumber, CommonConstants.CHAPTER_SIZE);
 
@@ -309,17 +317,46 @@ public class ComicServiceImpl implements ComicService {
         } else {
             chapters = chapterRepository.findAllByComicId(sort2, comicId);
         }
+        List<ChapterRes> chapterRes = chapters.stream()
+                .map(item -> ChapterRes.builder()
+                        .chapId(item.getId())
+                        .chapNumber(item.getChapNumber())
+                        .title(item.getTitle())
+                        .comicName(item.getComic().getName())
+                        .genre(item.getComic().getGenres().get(0).getName())
+                        .author(item.getComic().getAuthor().getName())
+                        .comicType(item.getComic().getType().name())
+                        .createAt(item.getCreateAt())
+                        .updateAt(item.getUpdateAt())
+                        .minute(Duration.between(item.getCreateAt(),LocalDateTime.now()).toMinutes())
+                        .build())
+                .toList();
 
         // get chỉ số bắt đầu của element trong pageNumber
         int startIndex = (int) pageable.getOffset();
         // get chỉ số cuối của element trong pageNumber
         int endIndex = Math.min(startIndex + pageable.getPageSize(), chapters.size());
         // Lấy các element từ [startIndex,endIndex)
-        List<Chapter> pageContent = chapters.subList(startIndex, endIndex);
+        List<ChapterRes> pageContent = chapterRes.subList(startIndex, endIndex);
 
         // Thiết lập trang
-        Page<Chapter> chapterPage = new PageImpl<>(pageContent, pageable, chapters.size());
+        Page<ChapterRes> chapterPage = new PageImpl<>(pageContent, pageable, chapterRes.size());
         return chapterPage;
+    }
+
+    @Override
+    public List<ChapterRes> getAllChapter(Long comicId) {
+        List<Chapter> chapters = chapterRepository.findAllByComicId(Sort.by("chapNumber").descending(), comicId);
+        List<ChapterRes> chapterRes = chapters.stream()
+                .map(item -> ChapterRes.builder()
+                        .chapId(item.getId())
+                        .chapNumber(item.getChapNumber())
+                        .title(item.getTitle())
+                        .createAt(item.getCreateAt())
+                        .updateAt(item.getUpdateAt())
+                        .build())
+                .toList();
+        return chapterRes;
     }
 
     @Override
@@ -415,5 +452,7 @@ public class ComicServiceImpl implements ComicService {
         Long total = followComicRepository.getTotalFollow(comicId);
         return total;
     }
+
+    
 
 }

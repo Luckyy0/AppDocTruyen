@@ -1,4 +1,4 @@
-.popup-update-comic {
+.popup-chapter {
     display: none;
     z-index: 1000;
     width: 100%;
@@ -9,22 +9,88 @@
     left: 0;
     overflow: hidden;
 }
+
 .wrapper {
     background-color: #1f0606;
     display: flex;
+
+    margin: 0 auto;
     margin-top: 6vh;
-    height: 1800px;
-    align-items: center;
-    justify-content: space-around;
+    height: 900px;
+    align-items: flex-start;
+    justify-content: flex-start;
     .label {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 5rem;
         margin-top: 3rem;
         font-weight: 600;
-        color: aquamarine;
+        color: orange;
     }
     .button {
         margin: 4rem auto;
+    }
+}
+
+.content_1 {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    .item__comic__image {
+        overflow: hidden;
+        object-fit: fill;
+    }
+    .item__comic__info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        line-height: 2.2;
+        .item__name {
+            color: orange;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+    }
+    .item__list__chapter {
+        .chapter__label {
+            border: 1px solid aquamarine;
+            margin: 0;
+            margin-left: 2rem;
+            padding-right: 1rem;
+            .label__chapter {
+                font-size: 1.3rem;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+        .chapter__menu {
+            overflow-y: scroll;
+            border: 1px solid aquamarine;
+            height: 40rem;
+            box-shadow: 1px 3px 3px 1px #06ed5f;
+            border-radius: 0 5px;
+            margin-left: 2rem;
+            .chapter__menu-item {
+                text-align: center;
+                font-size: 1.3rem;
+                padding: 1rem 0;
+                &:hover {
+                    background-color: #fff;
+                    color: black;
+                }
+            }
+        }
+    }
+}
+.content_2 {
+    height: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .item{
+        margin-top: 5rem;
+        margin-bottom: 5rem;
     }
 }
 .genre {
@@ -169,4 +235,33 @@
 
 .hidden {
     display: none !important;
+}
+
+.add {
+    display: none;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background-color:  rgba(32, 35, 42, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    .add_wrapper {
+        background-color: #1f0606;
+        margin-top: 12vh;
+        height: 600px;
+        .add_label{
+            text-align: center;
+            font-size: 1.8rem;
+            height: 4rem;
+            font-weight: 600;
+            color: orange;
+            margin-top: 4rem;
+        }
+        .add_content{
+            
+        }
+    }
 }

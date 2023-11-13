@@ -2,52 +2,101 @@ import styles from "./PopupChapter.module.scss";
 import classNames from "classnames/bind";
 import privateApi from "../../../../../api/PrivateApi";
 import publicApi from "../../../../../api/PublicApi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     ButtonAdmin,
-    RadioWithLabel,
     TextAreaWithLabel,
-    Popup,
     InputWithLabel,
+    Label,
 } from "../../../../../components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faListUl } from "@fortawesome/free-solid-svg-icons";
 const cx = classNames.bind(styles);
 
-const Type = ["FREE", "PAID"];
+function PopupChapter({ isShow, onshow, item }) {
 
-function PopupChapter({ isShow, onshow, item, onAction }) {
-    const [data1, setData1] = useState({
-        image: item.image,
-        name: item.name,
-        description: item.description,
-        author_id: item.author.id,
-        genres: item.genres.map((x) => x.id),
-        type: item.type,
+    const [chapters, setChapters] = useState([]);
+
+    // Add chapter
+    const [addChapterShow, setAddChapterShow] = useState(false);
+    const [dataAddChapter, setDataAddChapter] = useState({
+        chapNumber: 1,
+        title: "",
+        content: "",
+        comicId: item.id,
     });
-    // author
-    const [popup, SetPopup] = useState(false);
-    const [popupSelectAuthor, setPopupSelectAuthor] = useState(false);
-    const [searchAuthor, setSearchAuthor] = useState("");
-    const [authors, setAuthors] = useState([]);
-    const [authorName, setAuthorName] = useState(item.author.name);
 
-    //genre
-    const [popupGenre, SetPopupGenre] = useState(false);
-    const [searchGenre, setSearchGenre] = useState("");
-    const [popupSelectGenre, setPopupSelectGenre] = useState(false);
-    const [genres, setGenres] = useState([]);
-    const [allGenres, setAllGenres] = useState([]);
+    // update chapter
+    const [dataUpdateChapter, setDataUpdateChapter] = useState({
+        chapId: "",
+        chapNumber: "",
+        title: "",
+        content: "",
+        comicId: item.id,
+    });
 
-    //genre action
-    const handleAddGenre = async (data, setData) => {
+    const handleUpdateChapter = async () =>{
+        if(dataUpdateChapter.chapId){
+            try {
+                const apiResponse = await privateApi.put("/chapter/"+dataUpdateChapter.chapId, {
+                    chapNumber: parseFloat(dataUpdateChapter.chapNumber),
+                    title: dataUpdateChapter.title,
+                    content: dataUpdateChapter.content,
+                    comicId: parseInt(dataUpdateChapter.comicId)
+                });
+                console.log(apiResponse);
+                alert("Cập nhật thành công");
+                fetchChapters();
+            } catch (error) {
+                if (!error?.response) {
+                    alert("Server not Response");
+                } else {
+                    console.log(error.response.data);
+                }
+            }
+        }
+        else{
+            alert("Vui lòng chọn chapter trước khi thực hiện update")
+        }
+        
+    }
+
+    const handleGetChapter = async (chapterId) =>{
         try {
-            const apiResponse = await privateApi.post("/genre", {
-                name: data[0]?.value,
+            const apiResponse = await publicApi.get("/chapter/"+chapterId)
+            const chap = apiResponse.data
+            setDataUpdateChapter({
+                chapId: chap.id,
+                chapNumber: chap.chapNumber,
+                title: chap.title,
+                content: chap.content,
+                comicId: chap.comic.id,
             });
-            setData([{ name: "Tên thể loại ", value: "" }]);
-            SetPopupGenre(false);
-            const dataCopy = { ...data1 };
-            dataCopy.genres.push(apiResponse.data.id);
-            setData1(dataCopy);
+            console.log(apiResponse.data);
+        } catch (error) {
+            if (!error?.response) {
+                alert("Server not Response");
+            } else {
+                console.log(error.response.data);
+            }
+        }
+    }
+
+    const handleAddChapter = async () => {
+        try {
+            const apiResponse = await privateApi.post("/chapter", {
+                ...dataAddChapter,
+                chapNumber: parseFloat(dataAddChapter.chapNumber),
+            });
+            setDataAddChapter({
+                chapNumber: 1,
+                title: "",
+                content: "",
+                comicId: item.id,
+            });
+            console.log(apiResponse);
+            alert("Thêm thành công");
+            fetchChapters();
         } catch (error) {
             if (!error?.response) {
                 alert("Server not Response");
@@ -56,408 +105,298 @@ function PopupChapter({ isShow, onshow, item, onAction }) {
             }
         }
     };
-    const handleSearchgenres = async () => {
+
+    const fetchChapters = async () => {
         try {
-            const response = await publicApi.get("/genre", {
-                params: { search: searchGenre },
-            });
-            setGenres(response.data);
-            const response2 = await publicApi.get("/genre");
-            setAllGenres(response2.data);
+            const response = await publicApi.get("/chapter/all/" + item.id);
+            setChapters(response.data);
+            // console.log(response);
         } catch (error) {
             console.log(error.response?.data?.message || "Có lỗi xảy ra");
         }
     };
-    // author action
-    const handleAddAuthor = async (data, setData) => {
-        try {
-            const apiResponse = await privateApi.post("/author", {
-                name: data[0]?.value,
-                description: data[1]?.value,
-            });
-            setData([
-                { name: "Tên tác giả", value: "" },
-                { name: "Thông tin mô tả", value: "" },
-            ]);
-            SetPopup(false);
-            setData1({
-                ...data1,
-                author_id: apiResponse.data.id,
-            });
-            setAuthorName(apiResponse.data.name);
-        } catch (error) {
-            if (!error?.response) {
-                alert("Server not Response");
-            } else {
-                console.log(error.response.data);
+
+    useEffect(() => {
+        const fetchChapters = async () => {
+            try {
+                const response = await publicApi.get("/chapter/all/" + item.id);
+                setChapters(response.data);
+                // console.log(response.data);
+            } catch (error) {
+                console.log(error.response?.data?.message || "Có lỗi xảy ra");
             }
-        }
-    };
-    const handleSearchAuthors = async () => {
-        try {
-            const response = await publicApi.get("/author", {
-                params: { search: searchAuthor },
-            });
-            setAuthors(response.data);
-        } catch (error) {
-            console.log(error.response?.data?.message || "Có lỗi xảy ra");
-        }
-    };
-    console.log(data1);
+        };
+        fetchChapters();
+    }, [item.id]);
+    console.log("vui");
+    console.log(chapters);
+    console.log(dataAddChapter);
     return (
-        <div
-            className={cx("popup-update-comic", { show: isShow })}
-            onClick={onshow}
-        >
+        <div className={cx("popup-chapter", { show: isShow })} onClick={onshow}>
             <div
-                className={cx("wrapper", "row", "a-10", "a-o-1")}
+                className={cx("wrapper", "row", "a-11")}
                 onClick={(e) => e.stopPropagation()}
             >
                 <p className={cx("label", "col", "a-12")}>
-                    Quản lý thông tin truyện
+                    {" "}
+                    Quản lý chương truyện{" "}
                 </p>
-                {/* Hình ảnh */}
-                <div className={cx("image")}>
-                    <img src={item.image} alt="img" />
-                </div>
-                {/* Tên truyện */}
-                <div className={cx("col", "a-10")}>
-                    <InputWithLabel
-                        label={"Tên truyện"}
-                        value={data1.name}
-                        onChange={(e) =>
-                            setData1({ ...data1, name: e.target.value })
-                        }
-                    />
-                </div>
-
-                {/* Mô tả */}
-                <div className={cx("col", "a-10")}>
-                    <TextAreaWithLabel
-                        label={"Mô tả"}
-                        value={data1.description}
-                        onChange={(e) =>
-                            setData1({ ...data1, description: e.target.value })
-                        }
-                    />
-                </div>
-
-                {/* Tác giả */}
-                <div className={cx("author", "row", "a-10")}>
-                    <p className={cx("author__label", "col", "a-2")}>
-                        Tác giả{" "}
-                    </p>
-                    <div className={cx("author__name", "col", "a-2")}>
-                        {authorName}
+                {/* content 1 */}
+                <div className={cx("content_1", "row", "a-5")}>
+                    {/* comic info */}
+                    <div className={cx("item__comic", "row", "a-12")}>
+                        {/* Hình ảnh */}
+                        <div className={cx("item__comic__image", "col", "a-5")}>
+                            <img
+                                className={cx(
+                                    "item__img",
+                                    "col",
+                                    "a-8",
+                                    "a-o-2"
+                                )}
+                                src={item.image}
+                                alt="img"
+                            />
+                        </div>
+                        <div className={cx("item__comic__info", "a-5")}>
+                            {/* Tên */}
+                            <div className={cx("item__name")}>{item.name}</div>
+                            {/* Tác giả */}
+                            <div className={cx("item__author")}>
+                                Tác giả: {item.author.name}
+                            </div>
+                            {/* Thể loại */}
+                            <div className={cx("item__genre")}>
+                                Thể loại:{" "}
+                                {item.genres.map((idx) => idx.name).toString()}
+                            </div>
+                            {/* Loại truyện */}
+                            <div className={cx("item__genre")}>
+                                Loại truyện: {item.type}
+                            </div>
+                        </div>
                     </div>
-                    <div className={cx("author__search", "row", "a-8")}>
-                        <p className={cx("author__search-label", "a-2")}>
-                            Tìm kiếm
-                        </p>
-                        <input
-                            className={cx("author__search-input", "a-4")}
-                            type="text"
-                            value={searchAuthor}
-                            onChange={(e) => setSearchAuthor(e.target.value)}
-                            spellCheck={false}
-                            required={true}
+                    {/* Danh sách chương */}
+                    <div className={cx("item__list__chapter", "row", "a-12")}>
+                        <Label
+                            name="Danh sách chương"
+                            icon={<FontAwesomeIcon icon={faListUl} />}
                         />
-                        <div className={cx("author__search-btn", "a-2")}>
-                            <ButtonAdmin
-                                name={"chọn"}
-                                onClick={() => {
-                                    setPopupSelectAuthor(true);
-                                    handleSearchAuthors();
+                        <div className={cx("chapter__label", "row", "a-11")}>
+                            <p className={cx("label__chapter", "col", "a-2")}>
+                                Chapter
+                            </p>
+                            <p className={cx("label__chapter", "col", "a-4")}>
+                                Tên chương
+                            </p>
+                            <p className={cx("label__chapter", "col", "a-3")}>
+                                Ngày tạo
+                            </p>
+                            <p className={cx("label__chapter", "col", "a-3")}>
+                                Ngày cập nhật
+                            </p>
+                        </div>
+                        <div className={cx("chapter__menu", "col", "a-11")}>
+                            {chapters.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className={cx(
+                                        "chapter__menu-item",
+                                        "row",
+                                        "a-12"
+                                    )}
+                                    onClick={()=>handleGetChapter(item.chapId)}
+                                >
+                                    <p
+                                        className={cx(
+                                            "chapter_name",
+                                            "col",
+                                            "a-2"
+                                        )}
+                                    >
+                                        {item.chapNumber}
+                                    </p>
+                                    <p
+                                        className={cx(
+                                            "chapter_name",
+                                            "col",
+                                            "a-4"
+                                        )}
+                                    >
+                                        {item.title}
+                                    </p>
+                                    <p
+                                        className={cx(
+                                            "chapter_name",
+                                            "col",
+                                            "a-3"
+                                        )}
+                                    >
+                                        {item.createAt.split("T")[0]}
+                                    </p>
+                                    <p
+                                        className={cx(
+                                            "chapter_name",
+                                            "col",
+                                            "a-3"
+                                        )}
+                                    >
+                                        {item?.updateAt?.split("T")[0] ||
+                                            "Chưa có"}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className={cx("content_2", "col", "a-7")}>
+                    <div className="col a-10">
+                        <div className={cx("label", "col", "a-12")}>
+                            Cập nhật chương 
+                            {dataUpdateChapter.chapId? <div>có id là {dataUpdateChapter.chapId} và có tên là  {dataUpdateChapter.title} </div> :<></>}
+                        </div>
+                        <div className={cx("a-12", "item")}>
+                            <InputWithLabel
+                                label={"Chương số"}
+                                value={dataUpdateChapter.chapNumber}
+                                onChange={(e) => {
+                                    setDataUpdateChapter({
+                                        ...dataUpdateChapter,
+                                        chapNumber: e.target.value,
+                                    });
                                 }}
                             />
                         </div>
-                        <div className={cx("author__search-btn", "a-3")}>
-                            <ButtonAdmin
-                                name={"Thêm mới"}
-                                onClick={() => SetPopup(true)}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Thể loại */}
-                <div className={cx("genre", "row", "a-10")}>
-                    <p className={cx("genre__label", "col", "a-2")}>
-                        Thể loại{" "}
-                    </p>
-                    <div className={cx("genre__name", "col", "a-2")}>
-                        {data1.genres.toString()}
-                    </div>
-                    <div className={cx("genre__search", "row", "a-8")}>
-                        <p className={cx("genre__search-label", "a-2")}>
-                            Tìm kiếm
-                        </p>
-                        <input
-                            className={cx("genre__search-input", "a-4")}
-                            type="text"
-                            value={searchGenre}
-                            onChange={(e) => setSearchGenre(e.target.value)}
-                            spellCheck={false}
-                            required={true}
-                        />
-                        <div className={cx("genre__search-btn", "a-2")}>
-                            <ButtonAdmin
-                                name={"chọn"}
-                                onClick={() => {
-                                    setPopupSelectGenre(true);
-                                    handleSearchgenres();
+                        <div className={cx("a-12", "item")}>
+                            <InputWithLabel
+                                label={"Tiêu đề"}
+                                value={dataUpdateChapter.title}
+                                onChange={(e) => {
+                                    setDataUpdateChapter({
+                                        ...dataUpdateChapter,
+                                        title: e.target.value,
+                                    });
                                 }}
                             />
                         </div>
-                        <div className={cx("genre__search-btn", "a-3")}>
-                            <ButtonAdmin
-                                name={"Thêm mới"}
-                                onClick={() => SetPopupGenre(true)}
+                        <div className={cx("a-12", "item")}>
+                            <TextAreaWithLabel
+                                label={"Nội dung chương"}
+                                value={dataUpdateChapter.content}
+                                onChange={(e) => {
+                                    setDataUpdateChapter({
+                                        ...dataUpdateChapter,
+                                        content: e.target.value,
+                                    });
+                                }}
                             />
                         </div>
-                    </div>
-                </div>
 
-                {/*Loại truyện  */}
-                <div className={cx("row", "a-10")}>
-                    <RadioWithLabel
-                        label={"Loại truyện"}
-                        data={Type}
-                        indexValue={Type.indexOf(data1.type)}
-                        onGetData={(index) => {
-                            setData1({
-                                ...data1,
-                                type: Type[index],
-                            });
-                        }}
-                    />
-                </div>
-
-                {/* button add */}
-                <div className={cx("row", "a-10", "a-o-1", "button")}>
-                    <div className={cx("col", "a-5", "a-o-1")}>
-                        <ButtonAdmin name={"Quay lại"} onClick={onshow} />
-                    </div>
-                    <div className={cx("col", "a-5", "a-o-1")}>
-                        <ButtonAdmin
-                            name={"Chỉnh sửa"}
-                            onClick={() => {
-                                onAction(data1);
-                            }}
-                        />
-                    </div>
-                </div>
-
-                {/* popup select author */}
-                {popupSelectAuthor && (
-                    <div
-                        className={cx("popup", { show: popupSelectAuthor })}
-                        onClick={() => setPopupSelectAuthor(false)}
-                    >
-                        <div
-                            className={cx("wrapper", "a-8", "a-o-2")}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className={cx("popup__label")}>
-                                Lựa chọn tác giả
-                            </div>
-
-                            <div className={cx("popup__content")}>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Tên tác giả</th>
-                                            <th>Mô tả</th>
-                                            <th>Hành động</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {authors.map((item) => (
-                                            <tr key={item.id}>
-                                                <td>{item.id}</td>
-                                                <td>{item.name}</td>
-                                                <td>{item.description}</td>
-                                                <td
-                                                    className={cx("select")}
-                                                    onClick={() => {
-                                                        setData1({
-                                                            ...data1,
-                                                            author_id: item.id,
-                                                        });
-                                                        setAuthorName(
-                                                            item.name
-                                                        );
-                                                        setPopupSelectAuthor(
-                                                            false
-                                                        );
-                                                    }}
-                                                >
-                                                    Chọn
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className={cx("popup__btn")}>
+                        {/* button */}
+                        <div className={cx("row", "a-10", "a-o-2", "button")}>
+                            <div className={cx("col", "a-3", "a-o-1")}>
                                 <ButtonAdmin
                                     name={"Quay lại"}
-                                    onClick={() => setPopupSelectAuthor(false)}
+                                    onClick={onshow}
+                                />
+                            </div>
+                            <div className={cx("col", "a-3", "a-o-1")}>
+                                <ButtonAdmin
+                                    name={"Chỉnh sửa"}
+                                    onClick={handleUpdateChapter}
+                                />
+                            </div>
+                            <div className={cx("col", "a-3", "a-o-1")}>
+                                <ButtonAdmin
+                                    name={"Thêm mới"}
+                                    onClick={() => setAddChapterShow(true)}
                                 />
                             </div>
                         </div>
                     </div>
-                )}
-                {/* Popup add author*/}
-                <Popup
-                    isShow={popup}
-                    onshow={() => SetPopup(false)}
-                    label={"Thêm tác giả"}
-                    actionName={"Xác nhận"}
-                    dataArr={[
-                        { name: "Tên tác giả", value: "" },
-                        { name: "Thông tin mô tả", value: "" },
-                    ]}
-                    onAction={(data, setData) => handleAddAuthor(data, setData)}
-                />
-
-                {/* popup select genre */}
-                {popupSelectGenre && (
-                    <div
-                        className={cx("popup", { show: popupSelectGenre })}
-                        onClick={() => setPopupSelectGenre(false)}
-                    >
-                        <div
-                            className={cx("wrapper", "a-8", "a-o-2")}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className={cx("popup__label")}>
-                                Lựa chọn thể loại
-                            </div>
-
-                            <div className={cx("popup__content")}>
-                                <div className={cx("popup__content-1")}>
-                                    <div className={cx("popup__label")}>
-                                        Thể loại đã chọn
-                                    </div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Tên Thể loại</th>
-                                                <th>Hành động</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {allGenres
-                                                .filter(
-                                                    (item) =>
-                                                        data1.genres.includes(
-                                                            item.id
-                                                        ) === true
-                                                )
-                                                .map((item) => (
-                                                    <tr key={item.id}>
-                                                        <td>{item.id}</td>
-                                                        <td>{item.name}</td>
-                                                        <td
-                                                            className={cx(
-                                                                "select"
-                                                            )}
-                                                            onClick={() => {
-                                                                const dataCopy =
-                                                                    {
-                                                                        ...data1,
-                                                                    };
-                                                                dataCopy.genres =
-                                                                    dataCopy.genres.filter(
-                                                                        (
-                                                                            itemId
-                                                                        ) =>
-                                                                            itemId !==
-                                                                            item.id
-                                                                    );
-                                                                setData1(
-                                                                    dataCopy
-                                                                );
-                                                            }}
-                                                        >
-                                                            Xóa
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div className={cx("popup__content-2")}>
-                                    <div className={cx("popup__label")}>
-                                        Danh sách thể loại
-                                    </div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Tên Thể loại</th>
-                                                <th>Hành động</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {genres
-                                                .filter(
-                                                    (item) =>
-                                                        data1.genres.includes(
-                                                            item.id
-                                                        ) === false
-                                                )
-                                                .map((item) => (
-                                                    <tr key={item.id}>
-                                                        <td>{item.id}</td>
-                                                        <td>{item.name}</td>
-                                                        <td
-                                                            className={cx(
-                                                                "select"
-                                                            )}
-                                                            onClick={() => {
-                                                                const dataCopy =
-                                                                    {
-                                                                        ...data1,
-                                                                    };
-                                                                dataCopy.genres.push(
-                                                                    item.id
-                                                                );
-                                                                setData1(
-                                                                    dataCopy
-                                                                );
-                                                            }}
-                                                        >
-                                                            Chọn
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div className={cx("popup__btn")}>
-                                <ButtonAdmin
-                                    name={"Quay lại"}
-                                    onClick={() => setPopupSelectGenre(false)}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
-                {/* Popup add genre*/}
-                <Popup
-                    isShow={popupGenre}
-                    onshow={() => SetPopupGenre(false)}
-                    label={"Thêm thể loại"}
-                    actionName={"Xác nhận"}
-                    onAction={(data, setData) => handleAddGenre(data, setData)}
-                    dataArr={[{ name: "Tên thể loại ", value: "" }]}
-                />
+                </div>
             </div>
+
+            {/* Popup add */}
+            {addChapterShow && (
+                <div
+                    className={cx("add", { show: addChapterShow })}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                >
+                    <div
+                        className={cx("add_wrapper", "row", "a-8", "a-o-2")}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className={cx("add_label", "col", "a-12")}>
+                            Thêm chương mới
+                        </div>
+                        <div
+                            className={cx(
+                                "add_content",
+                                "col",
+                                "a-10",
+                                "a-o-1"
+                            )}
+                        >
+                            <div className="a-12">
+                                <InputWithLabel
+                                    label={"Chương số"}
+                                    value={dataAddChapter.chapNumber}
+                                    onChange={(e) => {
+                                        setDataAddChapter({
+                                            ...dataAddChapter,
+                                            chapNumber: e.target.value,
+                                        });
+                                    }}
+                                />
+                            </div>
+                            <div className="a-12">
+                                <InputWithLabel
+                                    label={"Tiêu đề"}
+                                    value={dataAddChapter.title}
+                                    onChange={(e) => {
+                                        setDataAddChapter({
+                                            ...dataAddChapter,
+                                            title: e.target.value,
+                                        });
+                                    }}
+                                />
+                            </div>
+                            <div className="a-12">
+                                <TextAreaWithLabel
+                                    label={"Nội dung chương"}
+                                    value={dataAddChapter.content}
+                                    onChange={(e) => {
+                                        setDataAddChapter({
+                                            ...dataAddChapter,
+                                            content: e.target.value,
+                                        });
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        {/* button */}
+                        <div
+                            className={cx("row", "a-10", "a-o-1", "add_button")}
+                        >
+                            <div className={cx("col", "a-5", "a-o-1")}>
+                                <ButtonAdmin
+                                    name={"Quay lại"}
+                                    onClick={() => setAddChapterShow(false)}
+                                />
+                            </div>
+                            <div className={cx("col", "a-5", "a-o-1")}>
+                                <ButtonAdmin
+                                    name={"Thêm mới"}
+                                    onClick={handleAddChapter}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

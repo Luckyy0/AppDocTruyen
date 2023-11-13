@@ -1,5 +1,7 @@
 package com.comic.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.comic.backend.dto.CommentChapterReq;
 import com.comic.backend.dto.Comic.ChapterReq;
+import com.comic.backend.dto.Comic.ChapterRes;
 import com.comic.backend.dto.User.ApiResponse;
 import com.comic.backend.model.CommentChapter;
 import com.comic.backend.model.Comic.Chapter;
@@ -75,12 +78,19 @@ public class ChapterController {
     public ResponseEntity<?> getListChapter(
             @RequestParam(value = "comicId", required = false) Long comicId, @RequestParam("sort") String sort,
             @RequestParam("pagenumber") int pageNumber) throws JsonMappingException, JsonProcessingException {
-        Page<Chapter> page = comicService.getListChapter(comicId, sort, pageNumber);
+        Page<ChapterRes> page = comicService.getListChapter(comicId, sort, pageNumber);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @GetMapping("/chapter/all/{comicId}")
+    public ResponseEntity<?> getAllNotContent(
+            @PathVariable("comicId") Long comicId) {
+        List<ChapterRes> chapterRes = comicService.getAllChapter(comicId);
+        return new ResponseEntity<>(chapterRes, HttpStatus.OK);
+    }
+
     @GetMapping("/chapter/{id}")
-    public ResponseEntity<?> getChapterContent(@PathVariable("id") Long id)  {
+    public ResponseEntity<?> getChapterContent(@PathVariable("id") Long id) {
         Chapter chapter = comicService.getChapterById(id);
         return new ResponseEntity<>(chapter, HttpStatus.OK);
     }

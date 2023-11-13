@@ -3,6 +3,7 @@ package com.comic.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,28 +25,28 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @RequestMapping("/")
 public class ValidateTokenController {
 
-    @Autowired
-    private RefreshTokenService refreshTokenService;
+        @Autowired
+        private RefreshTokenService refreshTokenService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+        @Autowired
+        private JwtUtil jwtUtil;
 
-    @PostMapping(PathConstants.REFRESH_TOKEN)
-    public ResponseEntity<?> refreshToken(@RequestBody String refreshTokenReqStr)
-            throws JsonMappingException, JsonProcessingException {
-        CommonFunction.jsonValidate(ValidateTokenController.class, refreshTokenReqStr,
-                JsonConstant.JSON_REQ_REFRESH_TOKEN);
-        RefreshTokenRequest refreshTokenRequest = CommonFunction.stringJsonToObject(RefreshTokenRequest.class,
-                refreshTokenReqStr);
+        @PostMapping(PathConstants.REFRESH_TOKEN)
+        public ResponseEntity<?> refreshToken(@RequestBody String refreshTokenReqStr)
+                        throws JsonMappingException, JsonProcessingException {
+                CommonFunction.jsonValidate(ValidateTokenController.class, refreshTokenReqStr,
+                                JsonConstant.JSON_REQ_REFRESH_TOKEN);
+                RefreshTokenRequest refreshTokenRequest = CommonFunction.stringJsonToObject(RefreshTokenRequest.class,
+                                refreshTokenReqStr);
 
-        return refreshTokenService.findByToken(refreshTokenRequest.getToken())
-                .map(refreshTokenService::verifyRefreshToken)
-                .map(RefreshToken::getUser)
-                .map(user -> {
-                    String accessToken = jwtUtil.generateToken(user.getUsername());
-                    JwtResponse jwtResponse = JwtResponse.builder().accessToken(accessToken)
-                            .token(refreshTokenRequest.getToken()).build();
-                    return new ResponseEntity<>(jwtResponse, HttpStatus.ACCEPTED);
-                }).orElseThrow(() -> new CommonException("RefreshToken is not in database"));
-    }
+                return refreshTokenService.findByToken(refreshTokenRequest.getToken())
+                                .map(refreshTokenService::verifyRefreshToken)
+                                .map(RefreshToken::getUser)
+                                .map(user -> {
+                                        String accessToken = jwtUtil.generateToken(user.getUsername());
+                                        JwtResponse jwtResponse = JwtResponse.builder().accessToken(accessToken)
+                                                        .token(refreshTokenRequest.getToken()).build();
+                                        return new ResponseEntity<>(jwtResponse, HttpStatus.ACCEPTED);
+                                }).orElseThrow(() -> new CommonException("RefreshToken is not in database"));
+        }
 }

@@ -31,14 +31,15 @@
                 td {
                     padding: 0.7rem 0;
                 }
-                &:not(:first-child):hover {
-                    background-color: coral;
-                }
+                // &:not(:first-child):hover {
+                //     background-color: coral;
+                // }
             }
         }
         .delete,
         .change{
             cursor: pointer;
+            color: aqua;
             &:hover{
                 color: orange;
             }

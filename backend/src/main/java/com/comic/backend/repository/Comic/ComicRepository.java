@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.comic.backend.model.Comic.Comic;
+import com.comic.backend.utils.Constants.STATUS;
 
 public interface ComicRepository extends JpaRepository<Comic, Long> {
 
@@ -17,5 +18,18 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
     List<Comic> findAllWithFilter(@Param("searchBy") String searchBy,@Param("searchByData") String searchByData);
 
     List<Comic> findAllById(int parseInt);
+
+    @Query("SELECT o FROM Comic o "+
+        "WHERE (:inSearch = '' OR o.name LIKE %:inSearch% OR o.author.name LIKE %:inSearch%) "+
+        "AND (:genreIds IS NULL OR EXISTS (SELECT 1 FROM o.genres g WHERE g.name IN :genreIds)) "+
+        "AND (:statusCondition IS NULL OR o.status = :statusCondition) "+
+        "AND ((:minChapter IS NULL AND :maxChapter IS NULL) OR (SIZE(o.chapters) BETWEEN :minChapter AND :maxChapter)) "+
+        "ORDER BY "+
+        "CASE WHEN :sortBy = 'view' THEN o.view END DESC, "+
+        "CASE WHEN :sortBy = 'like' THEN SIZE(o.likeComics) END DESC, "+
+        "CASE WHEN :sortBy = 'follow' THEN SIZE(o.followComics) END DESC, "+        
+        "CASE WHEN :sortBy = 'chapter' THEN (SELECT MAX(ch.createAt) FROM Chapter ch WHERE ch.comic = o) END DESC, "+
+        "CASE WHEN :sortBy = 'random' THEN RAND() END")
+    List<Comic> findByUserSearch(@Param("inSearch") String inSearch,@Param("sortBy") String sortBy,@Param("genreIds") List<String> genreCondition, STATUS statusCondition, int minChapter, int maxChapter);
 
 }

@@ -1,24 +1,42 @@
 .wrapper {
     min-height: 3.5%;
     padding: 1.3rem;
-    // border-bottom: 1px solid red;
     margin-bottom: 1%;
+    text-align: center;
+    font-size: 1.5rem;
     cursor: pointer;
-    .content-genre {
-        color: #ccc;
-    }
-    .content-chap {
-        font-weight: 600;
-
-    }
-    .content-auth {
-        color: #ccc;
+    .content-gen {
+        color: #3e3333;
     }
     .content-time {
-        color: #ccc;
+        animation: colorChange 5s infinite;
     }
-    &:hover{
-        color: orangered!important;
-        font-size: 1.8rem;
+    .content-comic {
+        color: orange;
+        font-weight: 600;
+    }
+    &:hover {
+        color: orangered !important;
+        font-size: 1.6rem;
     }
 }
+
+@keyframes colorChange {
+    0% {
+        color: red;
+    }
+    25% {
+        color: rgb(0, 255, 4);
+    }
+    50% {
+        color: blue;
+    }
+    75% {
+        color: green;
+    }
+    100% {
+        color: red;
+    }
+}
+
+

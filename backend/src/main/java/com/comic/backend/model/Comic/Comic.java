@@ -9,6 +9,8 @@ import com.comic.backend.model.CommentComic;
 import com.comic.backend.model.FollowComic;
 import com.comic.backend.model.LikeComic;
 import com.comic.backend.utils.Constants.COMIC;
+import com.comic.backend.utils.Constants.GENDER;
+import com.comic.backend.utils.Constants.STATUS;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -56,6 +58,13 @@ public class Comic {
 
     @Enumerated(EnumType.STRING)
     private COMIC type;
+
+    @Default
+    @Enumerated(EnumType.STRING)
+    private STATUS status = STATUS.IN_PROGRESS;
+
+    @Default
+    private Long view=0l;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

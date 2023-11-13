@@ -9,6 +9,7 @@ import com.comic.backend.dto.CommentChapterReq;
 import com.comic.backend.dto.CommentComicReq;
 import com.comic.backend.dto.Comic.AuthorReq;
 import com.comic.backend.dto.Comic.ChapterReq;
+import com.comic.backend.dto.Comic.ChapterRes;
 import com.comic.backend.dto.Comic.ComicReq;
 import com.comic.backend.dto.Comic.GenreReq;
 import com.comic.backend.model.CommentChapter;
@@ -18,6 +19,7 @@ import com.comic.backend.model.Comic.Chapter;
 import com.comic.backend.model.Comic.Comic;
 import com.comic.backend.model.Comic.Genre;
 import com.comic.backend.model.User.User;
+import com.comic.backend.utils.Constants.STATUS;
 
 @Service
 public interface ComicService {
@@ -46,7 +48,7 @@ public interface ComicService {
 
     Comic updateComic(ComicReq comicReq, long id);
 
-    Page<Comic> getAllComic(int pageNumber, int pageSize, String searchBy, String searchByData);
+    Page<Comic> getAllComic(int pageNumber, int pageSize, String searchBy, String searchByData, String inSearch, String sortBy, List<String> genreCondition, STATUS statusCondition, int minChapter, int maxChapter);
 
     Chapter addChapter(ChapterReq chapterReq);
 
@@ -56,7 +58,7 @@ public interface ComicService {
 
     void deleteComic(long id);
 
-    Page<Chapter> getListChapter(Long comicId, String sort, int pageNumber);
+    Page<ChapterRes> getListChapter(Long comicId, String sort, int pageNumber);
 
     CommentChapter addCommentChapter(User user, CommentChapterReq commentChapterReq);
 
@@ -73,5 +75,7 @@ public interface ComicService {
     Page<Comic> getComicFollowByUser(User user, int pageNumber);
 
     Page<Comic> getComicLikeByUser(User user, int pageNumber);
+
+    List<ChapterRes> getAllChapter(Long comicId);
 
 }

@@ -30,7 +30,7 @@ public interface UserService {
 
     void createSubcription(SubcriptionReq subcriptionReq);
 
-    List<Subscription> getListSubscription();
+    List<Subscription> getListSubscription(Integer search);
 
     Subscription findSubscriptionById(Long subscriptionId);
 

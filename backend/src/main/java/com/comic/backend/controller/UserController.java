@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.comic.backend.dto.User.ApiResponse;
@@ -41,6 +43,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/")
+
 public class UserController {
 
     @Autowired
@@ -72,7 +75,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String jwt) {
         User user = userService.getUserByJwt(jwt);
-        
+
         UserProfileDTO profile = UserProfileDTO.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -161,8 +164,9 @@ public class UserController {
     }
 
     @GetMapping(PathConstants.GET_LIST_SUBSCRIPTION)
-    public ResponseEntity<?> getListSubscription() {
-        List<Subscription> subscriptions = userService.getListSubscription();
+    public ResponseEntity<?> getListSubscription(@RequestParam(defaultValue = "0") Integer search) {
+
+        List<Subscription> subscriptions = userService.getListSubscription(search);
         return new ResponseEntity<>(subscriptions, HttpStatus.ACCEPTED);
     }
 

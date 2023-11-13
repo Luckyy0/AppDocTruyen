@@ -25,6 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class Role {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

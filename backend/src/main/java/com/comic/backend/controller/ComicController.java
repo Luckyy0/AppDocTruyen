@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.comic.backend.dto.CommentComicReq;
 import com.comic.backend.dto.Comic.AuthorReq;
-import com.comic.backend.dto.Comic.ComicFilterReq;
 import com.comic.backend.dto.Comic.ComicReq;
 import com.comic.backend.dto.Comic.GenreReq;
 import com.comic.backend.dto.User.ApiResponse;
@@ -35,6 +35,7 @@ import com.comic.backend.utils.CommonFunction;
 import com.comic.backend.utils.Constants.CommonConstants;
 import com.comic.backend.utils.Constants.JsonConstant;
 import com.comic.backend.utils.Constants.PathConstants;
+import com.comic.backend.utils.Constants.STATUS;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -152,13 +153,20 @@ public class ComicController {
     public ResponseEntity<?> getAllComic(
             @RequestParam(value = "searchBy", required = false, defaultValue = "") String searchBy,
             @RequestParam(value = "searchByData", required = false, defaultValue = "") String searchByData,
+            @RequestParam(value = "inSearch", required = false, defaultValue = "") String inSearch,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "") String sortBy,
+            @RequestParam(value = "genre", required = false) List<String> genreCondition,
+            @RequestParam(value = "status", required = false) STATUS statusCondition,
+            @RequestParam(value = "minChapter", required = false, defaultValue = "0") int minChapter,
+            @RequestParam(value = "maxChapter", required = false, defaultValue = "10000") int maxChapter,
             @RequestParam("pageNumber") int pageNumber) {
 
         // CommonFunction.jsonValidate(ComicController.class, comicFilterReqStr,
         // JsonConstant.JSON_REQ_COMIC_FILTER);
         // ComicFilterReq comicFilterReq =
         // CommonFunction.stringJsonToObject(ComicFilterReq.class, comicFilterReqStr);
-        Page<Comic> page = comicService.getAllComic(pageNumber, CommonConstants.COMIC_SIZE, searchBy,searchByData);
+        Page<Comic> page = comicService.getAllComic(pageNumber, CommonConstants.COMIC_SIZE, searchBy, searchByData,
+                inSearch, sortBy, genreCondition, statusCondition, minChapter, maxChapter);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
