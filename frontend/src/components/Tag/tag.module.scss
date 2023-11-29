@@ -1,4 +1,4 @@
-.wrapper{
+.wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6,16 +6,24 @@
     color: #fff;
     padding: 0.6rem 2.9rem;
     border-radius: 4px;
-    transition:background-color 0.1s ease;
+    transition: background-color 0.1s ease;
     transition: opacity 0.2s ease-in;
     min-width: 17rem;
+    font-size: 1.6rem;
     cursor: pointer;
-    .name{
+    .name {
         padding-left: 0.5rem;
         user-select: none;
     }
-    &:hover{
+    &:hover {
         opacity: 0.6;
         color: #fff;
     }
+}
+
+.disable {
+    cursor: not-allowed;
+    pointer-events: none; 
+    opacity: 0.2;
+    
 }

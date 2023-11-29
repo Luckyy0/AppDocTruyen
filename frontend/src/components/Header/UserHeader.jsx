@@ -4,45 +4,38 @@ import {
     faClockRotateLeft,
     faMagnifyingGlass,
     faRankingStar,
-    faUser
+    faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames/bind";
-import { Link, generatePath } from "react-router-dom";
+import { Link, generatePath, useNavigate } from "react-router-dom";
 import styles from "./userHeader.module.scss";
 
 import { useRef, useState } from "react";
 import { actions, useStore } from "../../context/store";
 import useGenres from "../../hook/useGenre";
 import useGetProfile from "../../hook/useGetProfile";
-import { USER_MENU_TOP_COMIC } from "../../utils/constants";
+import { USER_ACTION, USER_MENU_TOP_COMIC } from "../../utils/constants";
 
-const userAction = [
-    { name: "Thông tin người dùng", path: "/info" },
-    { name: "Đăng ký thành viên", path: "/" },
-    { name: "Truyện yêu thích", path: "/like" },
-    { name: "Truyện theo dõi", path: "/mark" },
-    { name: "Đăng xuất", path: "/" },
-];
 const cx = classNames.bind(styles);
 
 function Header() {
-    
     const [, dispatch] = useStore();
     const [inSearch, setInSearch] = useState("");
     const inRef = useRef(null);
+    const navigate = useNavigate();
 
     const { profile } = useGetProfile();
     // console.log(profile);
 
     // call api get list genre
     const { genres, isLoading, error } = useGenres();
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    // if (isLoading) {
+    //     return <div>Loading...</div>;
+    // }
+    // if (error) {
+    //     return <div>Error: {error}</div>;
+    // }
 
     const handleGenre = (gen) => {
         dispatch(actions.setUserFilterSearchReset());
@@ -59,7 +52,10 @@ function Header() {
                 {/* Danh mục */}
                 <div className={cx("col", "a-4", "b-4", "genre")}>
                     <div className={cx("hover", "genre-menu")}>
-                        <FontAwesomeIcon className="icon-gutters" icon={faBars}/>
+                        <FontAwesomeIcon
+                            className="icon-gutters"
+                            icon={faBars}
+                        />
                         Danh mục
                     </div>
                     {/* List thể loại truyện */}
@@ -81,7 +77,11 @@ function Header() {
                 {/* xếp hạng */}
                 <div className={cx("col", "a-4", "b-4", "top")}>
                     <div className={cx("top-menu", "hover")}>
-                        <FontAwesomeIcon icon={faRankingStar} className="icon-gutters" size="lg"/>
+                        <FontAwesomeIcon
+                            icon={faRankingStar}
+                            className="icon-gutters"
+                            size="lg"
+                        />
                         <p className="dis-select">Xếp hạng</p>
                     </div>
                     {/* List xếp hạng */}
@@ -166,7 +166,7 @@ function Header() {
                             {/* User action */}
                             <div className={cx("user-options")}>
                                 <div className={cx("row", "a-12", "list")}>
-                                    {userAction.map((item, index) => (
+                                    {USER_ACTION.map((item, index) => (
                                         <Link
                                             key={index}
                                             className={cx(
@@ -179,6 +179,23 @@ function Header() {
                                             {item.name}
                                         </Link>
                                     ))}
+                                    <div
+                                        className={cx("item", "col", "a-12")}
+                                        onClick={() => {
+                                            localStorage.removeItem("token");
+                                            localStorage.removeItem(
+                                                "refreshToken"
+                                            );
+                                            navigate("/login");
+                                            window.scrollTo({
+                                                left: 0,
+                                                top: 0,
+                                                behavior: "smooth",
+                                            });
+                                        }}
+                                    >
+                                        <p className={cx("name")}>Đăng xuất</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -33,6 +33,8 @@ import com.comic.backend.model.User.UserSubscriptionInfo;
 import com.comic.backend.repository.User.UserSubscriptionInfoRepository;
 import com.comic.backend.service.UserService;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -51,7 +53,8 @@ public class PaymentController {
             throws UnsupportedEncodingException {
 
         User user = userService.getUserByJwt(jwt);
-        if(userService.checkUserVip(user)) throw new CommonException("User hiện đang sử dụng gói đăng ký ");
+        if (userService.checkUserVip(user))
+            throw new CommonException("User hiện đang sử dụng gói đăng ký ");
         Long user_id = user.getId();
         Long subscription_id = paymentReq.getSubscriptionId();
         Subscription subscription = userService.findSubscriptionById(subscription_id);
@@ -136,7 +139,7 @@ public class PaymentController {
     }
 
     @GetMapping("/payment/payment_info/{subscription_id}/{user_id}")
-    public ResponseEntity<?> paymentInfo(
+    public void paymentInfo(
             HttpServletResponse res,
             @PathVariable("subscription_id") Long subscription_id,
             @PathVariable("user_id") Long user_id,
@@ -150,7 +153,8 @@ public class PaymentController {
             @RequestParam("vnp_TmnCode") String TmnCode,
             @RequestParam("vnp_TransactionNo") String transactionNo,
             @RequestParam("vnp_TxnRef") String txnRef,
-            @RequestParam("vnp_SecureHash") String secureHash) throws IOException {
+            @RequestParam("vnp_SecureHash") String secureHash
+            ) throws IOException, ServletException {
 
         User user = userService.findUserById(user_id);
         Subscription subscription = userService.findSubscriptionById(subscription_id);
@@ -172,16 +176,15 @@ public class PaymentController {
         }
         UserSubscriptionInfo created = userSubscriptionInfoRepository.save(userSubscriptionInfo);
 
-        // res.sendRedirect("http://localhost:3000/search");
-        // return null;
-        return new ResponseEntity<>(PaymentResponse.builder()
-                .subscription_id(created.getId())
-                .email(created.getUser().getEmail())
-                .username(created.getUser().getUsername())
-                .price(created.getSubscription().getPrice()*1000)
-                .duration(created.getSubscription().getDuration())
-                .createAt(created.getCreateAt())
-                .info(created.getInfo())
-                .status(created.getStatus()).build(), HttpStatus.ACCEPTED);
+        res.sendRedirect("http://localhost:3000/payment_info/"+created.getId());
+    //     return new ResponseEntity<>(PaymentResponse.builder()
+    //             .subscription_id(created.getId())
+    //             .email(created.getUser().getEmail())
+    //             .username(created.getUser().getUsername())
+    //             .price(created.getSubscription().getPrice() * 1000)
+    //             .duration(created.getSubscription().getDuration())
+    //             .createAt(created.getCreateAt())
+    //             .info(created.getInfo())
+    //             .status(created.getStatus()).build(), HttpStatus.ACCEPTED);
     }
 }

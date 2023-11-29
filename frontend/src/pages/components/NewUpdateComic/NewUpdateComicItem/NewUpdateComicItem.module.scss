@@ -6,12 +6,14 @@
     font-size: 1.5rem;
     cursor: pointer;
     .content-gen {
+        position: relative;
         color: #3e3333;
     }
     .content-time {
         animation: colorChange 5s infinite;
     }
     .content-comic {
+        
         color: orange;
         font-weight: 600;
     }

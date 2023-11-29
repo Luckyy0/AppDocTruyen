@@ -4,11 +4,11 @@ import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
 
-function RadioWithLabel({ label, onGetData, data,indexValue }) {
+function RadioWithLabel({ label, onGetData, data,indexValue, color = 'aquamarine'}) {
     const [checked, setChecked] = useState(indexValue);
     return (
         <div className={cx("wrapper", "row", "a-12")}>
-            <p className={cx("label", "col", "a-2")}> {label}</p>
+            <p className={cx("label", "col", "a-2")} style={{color:color}}> {label}</p>
             <div className={cx("in", "row", "a-9","a-o-1")}>
                 {data.map((item, index) => (
                     <div key={index} className={cx("item")}>

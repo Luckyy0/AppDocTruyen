@@ -15,6 +15,7 @@ import com.comic.backend.model.CommentChapter;
 import com.comic.backend.model.CommentComic;
 import com.comic.backend.model.FollowComic;
 import com.comic.backend.model.LikeComic;
+import com.comic.backend.model.ViewComic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -94,6 +95,12 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<LikeComic> likeComics;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Set<ViewComic> viewComics;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

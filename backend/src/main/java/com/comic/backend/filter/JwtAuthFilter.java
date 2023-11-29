@@ -37,7 +37,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("jay1");
         try {
             String authRequest = request.getHeader("Authorization");
             String token = null;
@@ -59,7 +58,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             resolver.resolveException(request, response, null, e);
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             resolver.resolveException(request, response, null, new AuthException("Invalid token"));
         }
         // filterChain.doFilter(request, response);

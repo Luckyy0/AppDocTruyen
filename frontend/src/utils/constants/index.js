@@ -30,7 +30,7 @@ export const ADMIN_PAGE = [
 export const ADMIN_COMIC = [
     { name: "Thêm truyện", page: AdminAddComic },
     { name: "Chỉnh sửa thông tin", page: AdminUpdateComic },
-    { name: "Update chương", page: AdminUpdateChapter },
+    // { name: "Update chương", page: AdminUpdateChapter },
     { name: "Thể loại", page: AdminGenreComic },
     { name: "Tác giả", page: AdminBrowserComic },
 ];
@@ -38,6 +38,23 @@ export const ADMIN_COMIC = [
 export const USER_MENU_TOP_COMIC = [
     { name: "Đọc nhiều", path: "/topview" },
     { name: "Yêu thích", path: "/toplike" },
-    { name: "Đánh giá cao", path: "/toprate" },
+    { name: "Theo dõi", path: "/toprate" },
     { name: "Thịnh hành", path: "/toptrend" },
 ];
+
+export const USER_ACTION = [
+    { name: "Thông tin người dùng", path: "/info" },
+    { name: "Lịch sử đọc", path: "/history" },
+    { name: "Truyện yêu thích", path: "/like" },
+    { name: "Truyện theo dõi", path: "/mark" },
+    // { name: "Đăng xuất", path: "/"  },
+];
+
+export const TOP_PAGE_SIZE = 8;
+
+export const TOAST = {
+    WARRNING: "Warrning",
+    ERROR: "Error",
+    INFO: "Info",
+    SUCCESS: "Success",
+};

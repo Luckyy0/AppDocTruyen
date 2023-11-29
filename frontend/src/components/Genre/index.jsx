@@ -5,13 +5,13 @@ import { memo } from "react";
 import { actions, useStore } from "../../context/store";
 const cx = classNames.bind(styles);
 
-function Genre({ name }) {
+function Genre({ item, name }) {
     const [, dispatch] = useStore();
     return (
         <Link className={cx("wrapper")} to={"/search"} onClick={() => {
             dispatch(actions.setUserFilterSearchReset());
             dispatch(
-                actions.setUserFilterSearchGenre(name)
+                actions.setUserFilterSearchGenre(item?.name || name)
             );
             dispatch(actions.setUserFilterSearch());
             window.scrollTo({
@@ -20,7 +20,7 @@ function Genre({ name }) {
                 behavior: "smooth",
             });
         }}>
-            <p className={cx("name")}>{name}</p>
+            <p className={cx("name")}>{item?.name || name}</p>
         </Link>
     );
 }

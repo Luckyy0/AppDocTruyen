@@ -21,7 +21,6 @@ function NewUpdateComic() {
                 },
             });
             setChapters(response.data.content);
-            console.log(response.data.content);
         } catch (error) {
             console.log(error.response?.data?.message || "Có lỗi xảy ra");
         }
@@ -51,7 +50,7 @@ function NewUpdateComic() {
                     Xem tất cả
                 </p>
             </div>
-            {chapters.map((item) => (
+            {chapters.slice(0,7).map((item) => (
                 <div key={item.chapId} className="col a-12">
                     <NewUpdateComicItem item={item} />
                 </div>

@@ -15,4 +15,5 @@ import TopTrend from "./User/TopTrend";
 import Subscription from "./Admin/Subscription";
 import AdminMoney from "./Admin/Money";
 import AdminUser from "./Admin/User";
-export {AdminMoney,AdminUser,Subscription,TopRate,TopTrend,TopLike,TopView,Mark,Like, History,UserHome, ReadBook, AdminHome, Search, BookInfo ,Login,Signin};
+import SubscriptionInfo from "./User/SubscriptionInfo";
+export {SubscriptionInfo,AdminMoney,AdminUser,Subscription,TopRate,TopTrend,TopLike,TopView,Mark,Like, History,UserHome, ReadBook, AdminHome, Search, BookInfo ,Login,Signin};

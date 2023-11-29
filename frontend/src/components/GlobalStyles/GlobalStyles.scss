@@ -1,6 +1,7 @@
 @import "./variables.scss";
 @import "./Grid.scss";
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Mulish&family=Nunito+Sans:opsz@6..12&family=Roboto&family=Work+Sans&display=swap');
 
 * {
     box-sizing: border-box;
@@ -17,6 +18,7 @@ body {
     font-size: 1.6rem;
     line-height: $line-height;
     text-rendering: optimizeSpeed;
+    color: $text-color;
 }
 
 .offscreen {
@@ -82,3 +84,4 @@ a {
 .show {
     display: block;
 }
+

@@ -6,24 +6,24 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles);
 
-function UserHistoryItem() {
+function UserHistoryItem({item, onClick}) {
     return (
         <div className={cx("wrapper")}>
-            <Link className={cx("image")} to={"/book"}>
+            <Link className={cx("image")} to={"/book/"+item.comic.id+"/chap/"+item.chapId}>
                 <img
                     className={cx("image-main")}
-                    src="https://static.cdnno.com/poster/ban-dao-tu-tien-tro-choi-thanh-su-that/300.jpg?1678332133"
-                    alt="img"
+                    src={item.comic?.image}
+                    alt="ig"
                 />
             </Link>
             <div className={cx("content_1")}>
-                <Link className={cx("content-name")} to={"/book"}>
-                    Mao sơn tróc quỷ nhân
+                <Link className={cx("content-name")} to={"/book/"+item.comic.id+"/chap/"+item.chapId}>
+                    {item.comic?.name}
                 </Link>
-                <p className={cx("content-read")}>Đang đọc: 1/1005</p>
+                <p className={cx("content-read")}>Đang đọc: chương {item.chapNumber}/{item.comic.chap}</p>
             </div>
             <div className={cx("content_2")}>
-                <FontAwesomeIcon icon={faTrash} />
+                <FontAwesomeIcon icon={faTrash} onClick={()=>onClick(item.comic.id)}/>
             </div>
         </div>
     );

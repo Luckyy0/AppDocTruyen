@@ -53,5 +53,6 @@ public class CommentComic {
     @PostPersist
     private void onCreate() {
         this.createAt = LocalDateTime.now();
+        
     }
 }

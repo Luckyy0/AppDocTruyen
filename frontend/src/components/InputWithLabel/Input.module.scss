@@ -5,7 +5,6 @@
     .label{
         font-weight: 600;
         font-size: 1.5rem;
-        color: aquamarine;
         text-align: center;
         margin: auto 0;
         
@@ -17,11 +16,7 @@
             height: 100%;
             padding-left: 3rem;
             border-radius: 5px;
-            background-color: azure;
             border: 2px solid black;
-            &:focus{
-                border-color: aquamarine;
-            }
         }
     }
 }

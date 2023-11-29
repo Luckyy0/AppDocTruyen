@@ -4,11 +4,13 @@ import styles from "./CommentHeader.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
+import { useAuth } from "../../../../hook/useAuth";
 const cx = classNames.bind(styles);
 
-function CommentHeader() {
+function CommentHeader({ onClick }) {
+    const { auth } = useAuth();
+    const [commentInput, setCommentInput] = useState("");
     const inputRef = useRef(null);
-    console.log("render");
 
     const resizeTextArea = () => {
         if (!inputRef.current) {
@@ -24,22 +26,25 @@ function CommentHeader() {
 
     return (
         <div className={cx("row", "a-12", "wrapper")}>
-            <div className={cx("col", "a-1",'a-o-1', "user-image")}>
-                <UserImage />
+            <div className={cx("col", "a-1", "a-o-1", "user-image")}>
+                <UserImage image={auth.image}/>
             </div>
             <div className={cx("header_main", "col", "a-8")}>
                 <textarea
-                    onChange={() => {
+                    onChange={(e) => {
                         resizeTextArea();
+                        setCommentInput(e.target.value)
                     }}
+                    value={commentInput}
                     ref={inputRef}
                     className={cx("input")}
                     placeholder="Bình luận của bạn ...."
                     spellCheck={false}
                     type="text"
+                    required={true}
                 />
             </div>
-            <div className={cx("submit", "col", "a-1")}>
+            <div className={cx("submit", "col", "a-1")} onClick={()=>onClick(commentInput,setCommentInput)}>
                 <FontAwesomeIcon icon={faPaperPlane} />
             </div>
         </div>

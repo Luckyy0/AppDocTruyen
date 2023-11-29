@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,6 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.comic.backend.dto.ViewComicRes;
+import com.comic.backend.dto.Comic.ComicRes;
+import com.comic.backend.dto.Comic.SubscriptionRes;
 import com.comic.backend.dto.User.JwtResponse;
 import com.comic.backend.dto.User.LoginRequest;
 import com.comic.backend.dto.User.ProfileRequest;
@@ -26,6 +34,9 @@ import com.comic.backend.dto.User.UserDTO;
 import com.comic.backend.exception.CommonException;
 import com.comic.backend.exception.InvalidInputException;
 import com.comic.backend.exception.UserException;
+import com.comic.backend.model.FollowComic;
+import com.comic.backend.model.LikeComic;
+import com.comic.backend.model.ViewComic;
 import com.comic.backend.model.User.Gender;
 import com.comic.backend.model.User.RefreshToken;
 import com.comic.backend.model.User.Role;
@@ -33,6 +44,9 @@ import com.comic.backend.model.User.Subscription;
 import com.comic.backend.model.User.User;
 import com.comic.backend.model.User.UserProfile;
 import com.comic.backend.model.User.UserSubscriptionInfo;
+import com.comic.backend.repository.FollowComicRepository;
+import com.comic.backend.repository.LikeComicRepository;
+import com.comic.backend.repository.ViewComicRepository;
 import com.comic.backend.repository.User.GenderRepository;
 import com.comic.backend.repository.User.RoleRepository;
 import com.comic.backend.repository.User.SubscriptionRepository;
@@ -57,6 +71,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
     @Autowired
+    private ViewComicRepository viewComicRepository;
+    @Autowired
+    private LikeComicRepository likeComicRepository;
+    @Autowired
+    private FollowComicRepository followComicRepository;
+    @Autowired
     private UserSubscriptionInfoRepository userSubscriptionInfoRepository;
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -64,6 +84,9 @@ public class UserServiceImpl implements UserService {
     private RefreshTokenService refreshTokenService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    @Lazy
+    private ComicService comicService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -182,9 +205,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Subscription> getListSubscription(Integer search) {
-        if(search==0) return subscriptionRepository.findAll(Sort.by("duration").ascending());
-        return subscriptionRepository.findAllByDuration( search, Sort.by("duration").ascending());
+    public List<SubscriptionRes> getListSubscription(Integer search) {
+        List<Subscription> subscriptions;
+        if (search == 0)
+            subscriptions = subscriptionRepository.findAll(Sort.by("duration").ascending());
+        else {
+            subscriptions = subscriptionRepository.findAllByDuration(search, Sort.by("duration").ascending());
+        }
+        return subscriptions.stream().map(subscription -> SubscriptionRes.builder().id(subscription.getId())
+            .description(subscription.getDescription())
+            .duration(subscription.getDuration())
+            .price(subscription.getPrice())
+            .purchases(subscription.getSubcriptionInfo().size())
+            .build()).toList();
     }
 
     @Override
@@ -257,4 +290,126 @@ public class UserServiceImpl implements UserService {
         }
         throw new CommonException("User hiện tại chưa đăng ký thành viên vip");
     }
+
+    @Override
+    public UserSubscriptionInfo getSubscriptionInfo(User user, Long sub_info_id) {
+        UserSubscriptionInfo userSubscriptionInfo = userSubscriptionInfoRepository.findPaymentByUserAndSub(user.getId(),
+                sub_info_id);
+        return userSubscriptionInfo;
+    }
+
+    @Override
+    public Page<ViewComicRes> getViewsHistory(User user, int pageNumber, int pageSize) {
+        // Pageable chứa thông tin về số trang, kích thước trang và sắp xếp
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        // Data
+        List<ViewComic> viewComics = viewComicRepository.findAllByUserId(user.getId());
+        List<ViewComicRes> history = viewComics.stream().map(item -> ViewComicRes.builder()
+                .chapId(item.getChapId())
+                .chapNumber(item.getChapNumber())
+                .chapTitle(item.getChapTitle())
+                .comic(ComicRes.builder()
+                        .id(item.getComic().getId())
+                        .name(item.getComic().getName())
+                        .image(item.getComic().getImage())
+                        .description(item.getComic().getDescription())
+                        .type(item.getComic().getType())
+                        .status(item.getComic().getStatus())
+                        .view(item.getComic().getView())
+                        .genres(item.getComic().getGenres())
+                        .author(item.getComic().getAuthor())
+                        .follow(comicService.comicTotalFollow(item.getComic().getId()))
+                        .like(comicService.comicTotalLike(item.getComic().getId()))
+                        .chap(comicService.comicTotalChap(item.getComic().getId()))
+                        .createAt(item.getComic().getCreateAt())
+                        .updateAt(item.getComic().getUpdateAt())
+                        .build())
+                .createAt(item.getCreateAt())
+                .updateAt(item.getUpdateAt())
+                .build()).toList();
+        // To page
+        // get chỉ số bắt đầu của element trong pageNumber
+        int startIndex = (int) pageable.getOffset();
+        // get chỉ số cuối của element trong pageNumber
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), history.size());
+        // Lấy các element từ [startIndex,endIndex)
+        List<ViewComicRes> pageContent = history.subList(startIndex, endIndex);
+
+        // Thiết lập trang
+        Page<ViewComicRes> historyPage = new PageImpl<>(pageContent, pageable, history.size());
+        return historyPage;
+    }
+
+    @Override
+    public Page<ViewComicRes> getLikesHistory(User user, int pageNumber, int pageSize) {
+        // Pageable chứa thông tin về số trang, kích thước trang và sắp xếp
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<LikeComic> likeComics = likeComicRepository.findAllByUserId(user.getId());
+        List<ViewComicRes> history = likeComics.stream().map(item -> ViewComicRes.builder()
+                .comic(ComicRes.builder()
+                        .id(item.getComic().getId())
+                        .name(item.getComic().getName())
+                        .image(item.getComic().getImage())
+                        .description(item.getComic().getDescription())
+                        .type(item.getComic().getType())
+                        .status(item.getComic().getStatus())
+                        .view(item.getComic().getView())
+                        .genres(item.getComic().getGenres())
+                        .author(item.getComic().getAuthor())
+                        .follow(comicService.comicTotalFollow(item.getComic().getId()))
+                        .like(comicService.comicTotalLike(item.getComic().getId()))
+                        .chap(comicService.comicTotalChap(item.getComic().getId()))
+                        .createAt(item.getComic().getCreateAt())
+                        .updateAt(item.getComic().getUpdateAt())
+                        .build())
+                .build()).toList();
+        // To page
+        // get chỉ số bắt đầu của element trong pageNumber
+        int startIndex = (int) pageable.getOffset();
+        // get chỉ số cuối của element trong pageNumber
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), history.size());
+        // Lấy các element từ [startIndex,endIndex)
+        List<ViewComicRes> pageContent = history.subList(startIndex, endIndex);
+
+        // Thiết lập trang
+        Page<ViewComicRes> LikePage = new PageImpl<>(pageContent, pageable, history.size());
+        return LikePage;
+    }
+
+    @Override
+    public Page<ViewComicRes> getFollowsHistory(User user, int pageNumber, int pageSize) {
+        // Pageable chứa thông tin về số trang, kích thước trang và sắp xếp
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<FollowComic> followComics = followComicRepository.findAllByUserId(user.getId());
+        List<ViewComicRes> history = followComics.stream().map(item -> ViewComicRes.builder()
+                .comic(ComicRes.builder()
+                        .id(item.getComic().getId())
+                        .name(item.getComic().getName())
+                        .image(item.getComic().getImage())
+                        .description(item.getComic().getDescription())
+                        .type(item.getComic().getType())
+                        .status(item.getComic().getStatus())
+                        .view(item.getComic().getView())
+                        .genres(item.getComic().getGenres())
+                        .author(item.getComic().getAuthor())
+                        .follow(comicService.comicTotalFollow(item.getComic().getId()))
+                        .like(comicService.comicTotalLike(item.getComic().getId()))
+                        .chap(comicService.comicTotalChap(item.getComic().getId()))
+                        .createAt(item.getComic().getCreateAt())
+                        .updateAt(item.getComic().getUpdateAt())
+                        .build())
+                .build()).toList();
+        // To page
+        // get chỉ số bắt đầu của element trong pageNumber
+        int startIndex = (int) pageable.getOffset();
+        // get chỉ số cuối của element trong pageNumber
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), history.size());
+        // Lấy các element từ [startIndex,endIndex)
+        List<ViewComicRes> pageContent = history.subList(startIndex, endIndex);
+
+        // Thiết lập trang
+        Page<ViewComicRes> FollowPage = new PageImpl<>(pageContent, pageable, history.size());
+        return FollowPage;
+    }
+
 }

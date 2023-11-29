@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styles from "./tag.module.scss";
 import classNames from "classnames/bind";
 
@@ -11,13 +12,14 @@ const bg = [
     "brown",
 ];
 
-function Tag({ name, icon }) {
+function Tag({ name, icon, isDisable=false, onClick, bgd=bg[Math.floor(Math.random() * bg.length)] }) {
     return (
         <div
-            className={cx("wrapper")}
+            className={cx("wrapper",{disable: isDisable})}
             style={{
-                backgroundColor: bg[Math.floor(Math.random() * bg.length)],
+                backgroundColor: bgd,
             }}
+            onClick={onClick}
         >
             {icon}
             <p className={cx("name")}>{name}</p>

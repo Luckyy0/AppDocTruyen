@@ -89,9 +89,20 @@ public class ChapterController {
         return new ResponseEntity<>(chapterRes, HttpStatus.OK);
     }
 
-    @GetMapping("/chapter/{id}")
-    public ResponseEntity<?> getChapterContent(@PathVariable("id") Long id) {
-        Chapter chapter = comicService.getChapterById(id);
+    @GetMapping("/{comicId}/chapter/{chapterId}")
+    public ResponseEntity<?> getChapterContentFromFreeComic(@PathVariable("chapterId") Long chapterId,@PathVariable("comicId") Long comicId) {
+        ChapterRes chapter = comicService.getChapterFromFreeComicById(comicId, chapterId);
+        return new ResponseEntity<>(chapter, HttpStatus.OK);
+    }
+    // @GetMapping("/chapter/{id}")
+    // public ResponseEntity<?> getChapterContentZ(@PathVariable("id") Long id,@PathVariable("comicId") Long comicId) {
+    //     ChapterRes chapter = comicService.getChapterById(id);
+    //     return new ResponseEntity<>(chapter, HttpStatus.OK);
+    // }
+    @GetMapping("/api/{comicId}/chapter/{chapterId}")
+    public ResponseEntity<?> getChapterContentFromPaidComic(@PathVariable("chapterId") Long chapterId,@PathVariable("comicId") Long comicId,@RequestHeader("Authorization") String jwt) {
+        User user = userService.getUserByJwt(jwt);
+        ChapterRes chapter = comicService.getChapterFromPaidComicById(comicId, chapterId, user);
         return new ResponseEntity<>(chapter, HttpStatus.OK);
     }
 
@@ -110,4 +121,9 @@ public class ChapterController {
         return new ResponseEntity<>(commentChapter, HttpStatus.OK);
     }
 
+    @GetMapping("/commentChapter/{id}")
+    public ResponseEntity<?> getCommentChapterById(@PathVariable("id") Long id) {
+        List<CommentChapter> commentChapters = comicService.getAllCommentChapter(id);
+        return new ResponseEntity<>(commentChapters, HttpStatus.OK);
+    }
 }

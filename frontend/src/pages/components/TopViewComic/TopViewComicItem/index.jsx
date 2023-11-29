@@ -3,32 +3,33 @@ import classNames from "classnames/bind";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Genre, TopTag } from "../../../../components";
+import { Genre, TopTag, VipTag } from "../../../../components";
 
 const cx = classNames.bind(styles);
 
-function TopViewComicItem({index}) {
+function TopViewComicItem({ index, item }) {
     return (
         <div className={cx("wrapper")}>
-            <Link className={cx("image")} to={"/book"}>
-                <img
-                    className={cx("image-main")}
-                    src="https://static.cdnno.com/poster/ban-dao-tu-tien-tro-choi-thanh-su-that/300.jpg?1678332133"
-                    alt="img"
-                />
-                <TopTag index={index}/>
+            <Link className={cx("image")} to={"/book/" + item.id}>
+                {item.type === "PAID" ? <VipTag /> : <></>}
+                <img className={cx("image-main")} src={item.image} alt="img" />
+                <TopTag index={index} />
             </Link>
             <div className={cx("content_1")}>
-                <Link className={cx("content-name")} to={"/book"}>
-                    Mao sơn tróc quỷ nhân
+                <Link className={cx("content-name")} to={"/book/" + item.id}>
+                    {item.name}
                 </Link>
                 <p className={cx("content-des")}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid saepe expedita corrupti facilis laudantium placeat est, quis, reiciendis magnam reprehenderit, quae nihil ipsam quibusdam. Nisi vitae velit alias reiciendis unde?
+                    {item.description.length > 280
+                        ? item.description.slice(0, 280) + "..."
+                        : item.description}
                 </p>
                 <div className={cx("content-child")}>
-                    <p className={cx("content-auth")}>Tác giả</p>
-                    <p>Lượt đọc: 999 999</p>
-                    <Genre name={"Kiếm hiệp"}/>
+                    <p className={cx("content-auth")}>
+                        Tác giả: {item.author.name}
+                    </p>
+                    <p>Lượt đọc: {item.view}</p>
+                    <Genre name={"Kiếm hiệp"} />
                 </div>
             </div>
         </div>

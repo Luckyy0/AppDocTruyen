@@ -12,4 +12,7 @@ public interface UserSubscriptionInfoRepository extends JpaRepository<UserSubscr
 
     @Query("SELECT o FROM UserSubscriptionInfo o WHERE o.user.id = :userId ORDER BY createAt DESC LIMIT 1")
     Optional<UserSubscriptionInfo> findFirstByUserIdOrderByCreateDateDesc(@Param("userId") long userId);
+
+    @Query("SELECT o FROM UserSubscriptionInfo o WHERE o.user.id = :user_id AND o.id=:sub_info_id")
+    UserSubscriptionInfo findPaymentByUserAndSub(Long user_id, Long sub_info_id);
 }

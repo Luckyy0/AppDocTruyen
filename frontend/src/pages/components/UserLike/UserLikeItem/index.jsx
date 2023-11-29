@@ -6,21 +6,21 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles);
 
-function UserLikeItem() {
+function UserLikeItem({item, onClick}) {
     return (
         <div className={cx("wrapper")}>
-            <Link className={cx("image")} to={"/book"}>
+            <Link className={cx("image")} to={"/book/"+item.comic.id}>
                 <img
                     className={cx("image-main")}
-                    src="https://static.cdnno.com/poster/ban-dao-tu-tien-tro-choi-thanh-su-that/300.jpg?1678332133"
-                    alt="img"
+                    src={item.comic.image}
+                    alt="ig"
                 />
             </Link>
             <div className={cx("content_1")}>
-                <Link className={cx("content-name")} to={"/book"}>Mao sơn tróc quỷ nhân</Link>
-                <p className={cx("content-read")}>Đang đọc: 1/1005</p>
+                <Link className={cx("content-name")} to={"/book/"+item.comic.id}>{item.comic.name}</Link>
+                <p className={cx("content-read")}>Tổng số lượt thích: {item.comic.like}</p>
             </div>
-            <div className={cx("content_2")}>
+            <div className={cx("content_2")} onClick={()=> onClick(item.comic.id)}>
                 <FontAwesomeIcon icon={faTrash} />
             </div>
         </div>

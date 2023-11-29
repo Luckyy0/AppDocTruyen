@@ -3,14 +3,16 @@ import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {  useState } from "react";
+import { useState } from "react";
 import publicApi from "../../../api/PublicApi";
 import privateApi from "../../../api/PrivateApi";
+import { useAuth } from "../../../hook/useAuth";
 
 const cx = classNames.bind(styles);
 
 function Login() {
     const data = useLocation();
+    const { auth, setAuth } = useAuth();
     //data input
     const [credentials, setCredentials] = useState({
         username: data.state?.username || "",
@@ -39,7 +41,8 @@ function Login() {
             localStorage.setItem("token", accessToken);
             localStorage.setItem("refreshToken", token);
             // redirect
-            const dataRedirect = await privateApi.get("/profile");
+            const  dataRedirect = await privateApi.get("/profile");
+            setAuth({...auth, username: dataRedirect.data.username, image: dataRedirect.data.image})
             const { roles } = dataRedirect.data;
             roles.includes("ADMIN")
                 ? navigate("/admin", { replace: true })

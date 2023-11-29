@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.comic.backend.dto.CheckRes;
+import com.comic.backend.dto.ViewComicRes;
+import com.comic.backend.dto.Comic.SubscriptionRes;
 import com.comic.backend.dto.User.ApiResponse;
 import com.comic.backend.dto.User.JwtResponse;
 import com.comic.backend.dto.User.LoginRequest;
@@ -166,7 +169,7 @@ public class UserController {
     @GetMapping(PathConstants.GET_LIST_SUBSCRIPTION)
     public ResponseEntity<?> getListSubscription(@RequestParam(defaultValue = "0") Integer search) {
 
-        List<Subscription> subscriptions = userService.getListSubscription(search);
+        List<SubscriptionRes> subscriptions = userService.getListSubscription(search);
         return new ResponseEntity<>(subscriptions, HttpStatus.ACCEPTED);
     }
 
@@ -177,6 +180,44 @@ public class UserController {
         return new ResponseEntity<>(userSubscriptionInfo, HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/api/payment_info/{subscription_info_id}")
+    public ResponseEntity<?> getSubscriptionInfo(@RequestHeader("Authorization") String jwt,
+            @PathVariable("subscription_info_id") Long sub_info_id) {
+        User user = userService.getUserByJwt(jwt);
+        UserSubscriptionInfo userSubscriptionInfo = userService.getSubscriptionInfo(user,sub_info_id);
+        return new ResponseEntity<>(userSubscriptionInfo, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("api/history")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<?> getViewHistory(@RequestHeader("Authorization") String jwt,
+            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
+        User user = userService.getUserByJwt(jwt);
+        Page<ViewComicRes> page = userService.getViewsHistory(user, pageNumber, pageSize);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("api/like")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<?> getLikeHistory(@RequestHeader("Authorization") String jwt,
+            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
+        User user = userService.getUserByJwt(jwt);
+        Page<ViewComicRes> page = userService.getLikesHistory(user, pageNumber, pageSize);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("api/follow")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<?> getFollowHistory(@RequestHeader("Authorization") String jwt,
+            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
+        User user = userService.getUserByJwt(jwt);
+        Page<ViewComicRes> viewComics = userService.getFollowsHistory(user, pageNumber, pageSize);
+        return new ResponseEntity<>(viewComics, HttpStatus.OK);
+    }
+
     @GetMapping("/api/hello")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public String hello() {
@@ -184,18 +225,11 @@ public class UserController {
 
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> redi(HttpServletResponse res) throws IOException {
-
-        return null;
-
-    }
-
-    @GetMapping("/api/test")
-    public ResponseEntity<?> redi(@RequestHeader("Authorization") String jwt) throws IOException {
+    @GetMapping("/api/checkuser")
+    public ResponseEntity<?> checkUserVip(@RequestHeader("Authorization") String jwt) throws IOException {
         User user = userService.getUserByJwt(jwt);
-        userService.checkUserVip(user);
-        return null;
+        boolean check = userService.checkUserVip(user);
+        return new ResponseEntity<>(CheckRes.builder().status(check).build(), HttpStatus.OK);
 
     }
 

@@ -2,8 +2,11 @@ package com.comic.backend.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.comic.backend.dto.ViewComicRes;
+import com.comic.backend.dto.Comic.SubscriptionRes;
 import com.comic.backend.dto.User.JwtResponse;
 import com.comic.backend.dto.User.LoginRequest;
 import com.comic.backend.dto.User.ProfileRequest;
@@ -11,6 +14,7 @@ import com.comic.backend.dto.User.RePasswordRequest;
 import com.comic.backend.dto.User.SignupReq;
 import com.comic.backend.dto.User.SubcriptionReq;
 import com.comic.backend.dto.User.UserDTO;
+import com.comic.backend.model.ViewComic;
 import com.comic.backend.model.User.Subscription;
 import com.comic.backend.model.User.User;
 import com.comic.backend.model.User.UserSubscriptionInfo;
@@ -30,7 +34,7 @@ public interface UserService {
 
     void createSubcription(SubcriptionReq subcriptionReq);
 
-    List<Subscription> getListSubscription(Integer search);
+    List<SubscriptionRes> getListSubscription(Integer search);
 
     Subscription findSubscriptionById(Long subscriptionId);
 
@@ -43,4 +47,12 @@ public interface UserService {
     boolean checkUserVip(User user);
 
     UserSubscriptionInfo getSubscriptionNow(User user);
+
+    Page<ViewComicRes> getViewsHistory(User user, int pageNumber, int pageSize);
+
+    Page<ViewComicRes> getLikesHistory(User user, int pageNumber, int pageSize);
+
+    Page<ViewComicRes> getFollowsHistory(User user, int pageNumber, int pageSize);
+
+    UserSubscriptionInfo getSubscriptionInfo(User user, Long sub_info_id);
 }

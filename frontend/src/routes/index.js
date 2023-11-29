@@ -17,6 +17,7 @@ import {
     ReadBook,
     Search,
     Signin,
+    SubscriptionInfo,
     TopLike,
     TopRate,
     TopTrend,
@@ -29,8 +30,8 @@ import { AdminUpdateComicPage } from "../pages/components";
 const publicRoutes = [
     { path: "/", component: UserHome, layout: BasicLayout },
     { path: "/search/*", component: Search, layout: MainLayout },
-    { path: "/book", component: BookInfo, layout: BasicLayout },
-    { path: "/book/chap", component: ReadBook, layout: BasicLayout },
+    { path: "/book/:id", component: BookInfo, layout: BasicLayout },
+    { path: "/book/:bookId/chap/:chapId", component: ReadBook, layout: BasicLayout },
     { path: "/login", component: Login, layout: EmptyLayout },
     { path: "/signin", component: Signin, layout: EmptyLayout },
     { path: "/topview", component: TopView, layout: BasicLayout },
@@ -50,6 +51,7 @@ const privateRoutes = [
     { path: "/like", component: Like, layout: BasicLayout, role: 'USER' },
     { path: "/mark", component: Mark, layout: BasicLayout, role: 'USER' },
     { path: "/info", component: Info, layout: BasicLayout, role: 'USER' },
+    { path: "/payment_info/:subscription_info_id", component: SubscriptionInfo, layout: BasicLayout, role: 'USER' },
 ];
 
 const ProtectedPage = ({ Layout, Page, role }) => {

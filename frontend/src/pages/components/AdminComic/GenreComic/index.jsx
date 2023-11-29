@@ -127,8 +127,8 @@ function AdminGenreComic() {
                                     <tr key={item.id}>
                                         <td>{item.id}</td>
                                         <td>{item.name}</td>
-                                        <td>0</td>
-                                        <td>0</td>
+                                        <td>{item.numberComic}</td>
+                                        <td>{item.view}</td>
                                         <td>
                                             <span
                                                 className={cx("change")}

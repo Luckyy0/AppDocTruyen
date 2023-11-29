@@ -6,6 +6,7 @@ import {
     SET_USER_FILTER_SEARCH_CHAP,
     SET_USER_FILTER_SEARCH_GENRE,
     SET_USER_FILTER_SEARCH_STATE,
+    SET_USER_FILTER_SEARCH_TYPE,
     SET_USER_SEARCH_ORDER,
     SET_USER_SEARCH_RESET,
 } from "./Constant";
@@ -20,9 +21,9 @@ const initState = {
     userSearchFilterGenre: new Set(),
     userSearchFilterState: "",
     userSearchFilterChap: "",
+    userSearchFilterType: "",
     userSearchOrder: 0,
 };
-
 
 function reducer(state, action) {
     switch (action.type) {
@@ -48,6 +49,11 @@ function reducer(state, action) {
                     action.payload
                 ),
             };
+        case SET_USER_FILTER_SEARCH_TYPE:
+            return {
+                ...state,
+                userSearchFilterType: action.payload,
+            };
         case SET_USER_FILTER_SEARCH_CHAP:
             return {
                 ...state,
@@ -65,6 +71,7 @@ function reducer(state, action) {
                     ...state.userSearchFilterGenre,
                     state.userSearchFilterState,
                     state.userSearchFilterChap,
+                    state.userSearchFilterType,
                 ],
             };
         case DELETE_USER_FILTER_SEARCH_ONE_ITEM:
@@ -73,6 +80,9 @@ function reducer(state, action) {
             }
             if (state.userSearchFilterState === action.payload) {
                 state.userSearchFilterState = "";
+            }
+            if (state.userSearchFilterType === action.payload) {
+                state.userSearchFilterType = "";
             }
             if (state.userSearchFilterGenre.has(action.payload)) {
                 state.userSearchFilterGenre.delete(action.payload);
@@ -92,6 +102,7 @@ function reducer(state, action) {
                 userSearchFilterGenre: new Set(),
                 userSearchFilterState: "",
                 userSearchFilterChap: "",
+                userSearchFilterType: "",
             };
         case SET_USER_SEARCH_ORDER:
             return {

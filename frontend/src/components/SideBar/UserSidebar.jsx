@@ -12,19 +12,8 @@ import useGenres from "../../hook/useGenre";
 
 const cx = classNames.bind(styles);
 
-const genre = [
-    { id: 0, name: "Kiếm hiệp" },
-    { id: 1, name: "Tiểu thuyết" },
-    { id: 2, name: "Ngôn tình" },
-    { id: 3, name: "Trinh thám" },
-    { id: 4, name: "Học đường" },
-    { id: 5, name: "Đời thường" },
-    { id: 6, name: "Xuyên không" },
-    { id: 7, name: "Linh dị" },
-    { id: 8, name: "Đô thị" },
-];
-
 const comicState = ["Đang ra", "Hoàn thành"];
+const comicType = ["Miễn phí", "Trả phí"];
 
 const comicChapterNumber = [
     "0 - 100",
@@ -45,8 +34,8 @@ function UserSidebar() {
         userSearchFilterChap,
         userSearchFilterState,
         userSearchFilterSidebar,
+        userSearchFilterType,
     } = state;
-
 
     const handleFilter = useCallback(
         (item) => dispatch(actions.deleteUserFilterSearchOneItem(item)),
@@ -65,6 +54,23 @@ function UserSidebar() {
         (chap) => {
             dispatch(actions.setUserFilterSearchChap(chap));
             dispatch(actions.setUserFilterSearch());
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+            });
+        },
+        [dispatch]
+    );
+
+    const handleTypeComic = useCallback(
+        (comicType) => {
+            dispatch(actions.setUserFilterSearchType(comicType));
+            dispatch(actions.setUserFilterSearch());
+            // ref.current?.scrollIntoView({
+            //     behavior: "smooth",
+            //     block: "start",
+            // });
             window.scrollTo({
                 top: 0,
                 left: 0,
@@ -140,6 +146,20 @@ function UserSidebar() {
                             name={comicState}
                             onClick={() => handleState(comicState)}
                             hidden={userSearchFilterState === comicState}
+                        />
+                    ))}
+                </div>
+            </div>
+            {/* Loại truyện */}
+            <div className={cx("form")}>
+                <Label name="Loại truyện" />
+                <div className={cx("content")}>
+                    {comicType.map((comicType, index) => (
+                        <TagWithBorder
+                            key={index}
+                            name={comicType}
+                            onClick={() => handleTypeComic(comicType)}
+                            hidden={userSearchFilterType === comicType}
                         />
                     ))}
                 </div>

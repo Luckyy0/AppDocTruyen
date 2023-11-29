@@ -6,6 +6,7 @@ import {
     SET_USER_FILTER_SEARCH_CHAP,
     SET_USER_FILTER_SEARCH_GENRE,
     SET_USER_FILTER_SEARCH_STATE,
+    SET_USER_FILTER_SEARCH_TYPE,
     SET_USER_SEARCH_ORDER,
     SET_USER_SEARCH_RESET,
 } from "./Constant";
@@ -29,6 +30,10 @@ export const setUserFilterSearch = (payload) => ({
 });
 export const setUserFilterSearchChap = (payload) => ({
     type: SET_USER_FILTER_SEARCH_CHAP,
+    payload,
+});
+export const setUserFilterSearchType = (payload) => ({
+    type: SET_USER_FILTER_SEARCH_TYPE,
     payload,
 });
 export const setUserFilterSearchGenre = (payload) => ({

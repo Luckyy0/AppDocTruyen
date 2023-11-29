@@ -13,5 +13,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 
     @Query("SELECT o FROM Chapter o WHERE o.comic.id = :id")
     List<Chapter> findAllByComicId(Sort sort2, @Param("id") Long id);
+
+    @Query("SELECT COUNT(c) FROM Chapter c WHERE c.comic.id = :comicId")
+    Long getTotalChap(@Param("comicId") Long comicId);
     
 }

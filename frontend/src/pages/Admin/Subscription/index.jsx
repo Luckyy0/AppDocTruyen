@@ -142,7 +142,7 @@ function Subscription() {
                                         <td>{item.duration}</td>
                                         <td>{item.price}.000 vnđ</td>
                                         <td>{item.description}</td>
-                                        <td>0</td>
+                                        <td>{item.purchases}</td>
                                         <td>
                                             <span
                                                 className={cx("change")}

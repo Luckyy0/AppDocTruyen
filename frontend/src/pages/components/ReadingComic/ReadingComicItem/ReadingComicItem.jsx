@@ -1,29 +1,41 @@
-import styles from "./ReadingComicItem.module.scss";
 import classNames from "classnames/bind";
+import { useNavigate } from "react-router-dom";
+import { VipTag } from "../../../../components";
+import {
+    handleAddViewIntoDatabase
+} from "../../../../utils/CommonFunction";
+import styles from "./ReadingComicItem.module.scss";
 
 const cx = classNames.bind(styles);
 
-function ReadingComicItem() {
+function ReadingComicItem({ item }) {
+    const navigate = useNavigate();
+    const handleClick = async () => {
+        await handleAddViewIntoDatabase(item.comicId, item.chapId);
+        navigate("/book/" + item.comicId + "/chap/" + item.chapId);
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+        });
+    };
     return (
         <div className={cx("wrapper", "row")}>
-            <div className={cx("image", "col", "a-2")}>
-                <img
-                    className={cx("image-main")}
-                    src="https://static.cdnno.com/poster/tien-phu-1/300.jpg?1691555408"
-                    alt="img"
-                />
+            <div className={cx("image")}>
+                {item.comicType === "PAID" ? <VipTag /> : <></>}
+                <img className={cx("image-main")} src={item.image} alt="img" />
             </div>
-            <div className={cx("content", "col", "a-10")}>
-                <p className={cx("content-name")}>Tên truyện</p>
-                <div className={cx("row")}>
-                    <p className={cx("content-dadoc", "col", "a-8")}>Đang đọc: chương 1</p>
-                    <p
-                        className={cx(
-                            "content-genre",
-                            "col",
-                            "a-4"
-                        )}
-                    >
+            <div className={cx("content")}>
+                <p className={cx("content-name")}>
+                    {item.comicName.length > 30
+                        ? item.comicName.slice(0, 28) + " ..."
+                        : item.comicName}
+                </p>
+                <div className={cx("line")}>
+                    <p className={cx("content-dadoc")}>
+                        Đang đọc: chương {item.chapNumber}
+                    </p>
+                    <p className={cx("content-genre")} onClick={handleClick}>
                         Đọc tiếp
                     </p>
                 </div>

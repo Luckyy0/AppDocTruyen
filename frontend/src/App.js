@@ -1,10 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ProtectedPage, privateRoutes, publicRoutes } from "./routes";
+import styles from "./app.module.scss";
+import classNames from "classnames/bind";
+
+const cx = classNames.bind(styles);
 
 function App() {
     return (
         <BrowserRouter>
-            <div className=" grid wide a b c d center">
+            <div className={cx("grid" ,"wide" ,"a", "b" ,"c" ,"d" ,"center","wrapper")}>
                 <Routes>
                     {publicRoutes.map((route, index) => {
                         const Layout = route.layout;

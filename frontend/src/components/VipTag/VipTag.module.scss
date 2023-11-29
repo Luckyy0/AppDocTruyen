@@ -1,0 +1,18 @@
+.index {
+    position: absolute;
+    top: 0;
+    right: 6%;
+    font-size: 2rem;
+    z-index: 1000;
+    text-align: center;
+    color: orangered;
+    .txt {
+        position: absolute;
+        font-size: 0.6rem;
+        font-weight: 600;
+        color: yellow;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+    }
+}

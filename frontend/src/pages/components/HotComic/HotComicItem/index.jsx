@@ -1,22 +1,30 @@
-import { TopTag } from "../../../../components";
+import { TopTag, VipTag } from "../../../../components";
 import styles from "./HotComicItem.module.scss";
+import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
 
-function HotComicItem() {
+function HotComicItem({ item, index }) {
     return (
         <div className={cx("container")}>
-            <div className={cx("content-1")}>
-                <img
-                    className={cx("image")}
-                    src="https://static.cdnno.com/poster/uyen-thien-ton/300.jpg?1673168341"
-                    alt="img"
-                />
-                <TopTag index={1}/>
-            </div>
+            <Link
+                className={cx("content-1")}
+                to={"/book/" + item.id}
+                onClick={() => {
+                    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                }}
+            >
+                {item.type === "PAID" ? <VipTag /> : <></>}
+                <img className={cx("image")} src={item.image} alt="img" />
+                <TopTag index={index + 1} />
+            </Link>
             <div className={cx("item__content")}>
-                <div className={cx("item__name")}>Comic name</div>
+                <div className={cx("item__name")}>
+                    {item.name.length > 20
+                        ? item.name.slice(0, 20) + ". . ."
+                        : item.name}
+                </div>
             </div>
         </div>
     );

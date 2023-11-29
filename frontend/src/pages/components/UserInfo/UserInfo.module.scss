@@ -6,7 +6,7 @@
         font-size: 2.2rem;
         border-bottom: 2px solid #aaa;
     }
-    .content_3{
+    .content_3 {
         margin-top: 3rem;
     }
 }
@@ -24,35 +24,42 @@
             width: 20rem;
             height: 20rem;
             margin-bottom: 2rem;
+            overflow: hidden;
             box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
                 rgba(0, 0, 0, 0.12) 0px -12px 30px,
                 rgba(0, 0, 0, 0.12) 0px 4px 6px,
                 rgba(0, 0, 0, 0.17) 0px 12px 13px,
                 rgba(0, 0, 0, 0.09) 0px -3px 5px;
             border-radius: 50%;
+            .image_content {
+                overflow: hidden;
+                object-fit: cover;
+                width: 20rem;
+                height: 20rem;
+            }
         }
-        .main_info-item{
+        .main_info-item {
             color: rgb(206, 21, 157);
             font-weight: 600;
             font-size: 1.6rem;
         }
     }
-    .des{
+    .des {
         margin-top: 3rem;
         text-align: justify;
     }
-    .sub_info{
+    .sub_info {
+        color: #333 !important;
         margin-top: 4rem;
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        .item{
+        .item {
             margin-top: 1rem;
             text-align: center;
-            flex: 0 0 50%;
-            
+            flex: 0 0 100%;
         }
     }
 }

@@ -11,13 +11,14 @@ const bg = [
     "brown",
 ];
 
-function LastTag({ name, icon }) {
+function LastTag({ name, icon, isDisable, onClick, bgd=  bg[Math.floor(Math.random() * bg.length)]}) {
     return (
         <div
-            className={cx("wrapper")}
+            className={cx("wrapper",{disable: isDisable})}
             style={{
-                backgroundColor: bg[Math.floor(Math.random() * bg.length)],
+                backgroundColor: bgd,
             }}
+            onClick={onClick}
         >
             
             <p className={cx("name")}>{name}</p>

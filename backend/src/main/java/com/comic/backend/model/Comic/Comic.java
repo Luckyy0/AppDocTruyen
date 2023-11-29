@@ -8,6 +8,7 @@ import java.util.Set;
 import com.comic.backend.model.CommentComic;
 import com.comic.backend.model.FollowComic;
 import com.comic.backend.model.LikeComic;
+import com.comic.backend.model.ViewComic;
 import com.comic.backend.utils.Constants.COMIC;
 import com.comic.backend.utils.Constants.GENDER;
 import com.comic.backend.utils.Constants.STATUS;
@@ -102,6 +103,12 @@ public class Comic {
     @JsonIgnore
     @OneToMany(mappedBy = "comic")
     private Set<LikeComic> likeComics;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "comic")
+    private Set<ViewComic> viewComics;
 
     private LocalDateTime createAt;
     private LocalDateTime updateAt;

@@ -2,21 +2,14 @@ import Logo from "../Logo";
 import styles from "./footer.module.scss";
 import classNames from "classnames/bind";
 import Genre from "../Genre";
+import useGenres from "../../hook/useGenre";
 
 
 const cx = classNames.bind(styles);
-const genre = [
-    { id: 0, name: "Kiếm hiệp" },
-    { id: 1, name: "Tiểu thuyết" },
-    { id: 2, name: "Ngôn tình" },
-    { id: 3, name: "Trinh thám" },
-    { id: 4, name: "Học đường" },
-    { id: 5, name: "Đời thường" },
-    { id: 6, name: "Xuyên không" },
-    { id: 7, name: "Linh dị" },
-    { id: 8, name: "Đô thị" },
-];
+
 function Footer() {
+
+    const {genres} = useGenres()
 
     return (
         <div className={cx("row", "wrapper")}>
@@ -27,7 +20,7 @@ function Footer() {
             </div>
             <div className={cx("info_2")}>
                 <div className={cx("list_comic")}>
-                    {genre.map((gen) => (
+                    {genres.map((gen) => (
                         <Genre
                             key={gen.id}
                             name={gen.name}

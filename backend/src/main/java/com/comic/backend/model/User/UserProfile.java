@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.Builder.Default;
 
 @Entity
 @Data
@@ -31,7 +32,8 @@ public class UserProfile {
     @Column(name = "first_name")
     private String firstName;
 
-    private String image;
+    @Default
+    private String image = "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg";
 
     private String description;
 

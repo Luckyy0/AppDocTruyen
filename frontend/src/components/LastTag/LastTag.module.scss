@@ -9,6 +9,7 @@
     transition:background-color 0.1s ease;
     transition: opacity 0.2s ease-in;
     min-width: 17rem;
+    font-size: 1.6rem;
     cursor: pointer;
     .name{
         padding-right: 0.5rem;
@@ -18,4 +19,10 @@
         opacity: 0.6;
         color: #fff;
     }
+}
+.disable {
+    cursor: not-allowed;
+    pointer-events: none; 
+    opacity: 0.2;
+    
 }

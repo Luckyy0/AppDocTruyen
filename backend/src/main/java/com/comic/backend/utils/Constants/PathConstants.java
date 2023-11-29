@@ -15,8 +15,8 @@ public class PathConstants {
     public static final String AUTHOR = "/api/author";
     public static final String COMIC = "/api/comic";
     public static final String CHAPTER = "/api/chapter";
-    public static final String COMMENT_CHAPTER = "/api/commentchapter";
-    public static final String COMMENT_COMIC = "/api/commentcomic";
+    public static final String COMMENT_CHAPTER = "/api/commentChapter";
+    public static final String COMMENT_COMIC = "/api/commentComic";
     public static final String LIKE = "/api/like";
     public static final String FOLLOW = "/api/follow";
 

@@ -61,16 +61,16 @@ function PopupChapter({ isShow, onshow, item }) {
         
     }
 
-    const handleGetChapter = async (chapterId) =>{
+    const handleGetChapter = async (comicId, chapterId) =>{
         try {
-            const apiResponse = await publicApi.get("/chapter/"+chapterId)
+            const apiResponse = await privateApi.get("/"+comicId+"/chapter/"+chapterId)
             const chap = apiResponse.data
             setDataUpdateChapter({
-                chapId: chap.id,
+                chapId: chap.chapId,
                 chapNumber: chap.chapNumber,
                 title: chap.title,
                 content: chap.content,
-                comicId: chap.comic.id,
+                comicId: chap.comicId,
             });
             console.log(apiResponse.data);
         } catch (error) {
@@ -128,9 +128,6 @@ function PopupChapter({ isShow, onshow, item }) {
         };
         fetchChapters();
     }, [item.id]);
-    console.log("vui");
-    console.log(chapters);
-    console.log(dataAddChapter);
     return (
         <div className={cx("popup-chapter", { show: isShow })} onClick={onshow}>
             <div
@@ -205,7 +202,7 @@ function PopupChapter({ isShow, onshow, item }) {
                                         "row",
                                         "a-12"
                                     )}
-                                    onClick={()=>handleGetChapter(item.chapId)}
+                                    onClick={()=>handleGetChapter(item.comicId, item.chapId)}
                                 >
                                     <p
                                         className={cx(
